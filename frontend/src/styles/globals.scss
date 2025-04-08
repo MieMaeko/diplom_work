@@ -52,11 +52,27 @@ header {
   
 }
 .menu {
+  
   ul {
     display: flex;
     gap: 64px;
+    font-weight: base.$bold;
   }
-  
+}
+.header-icons {
+  display: flex;
+  width: 130px;
+  // font-size: small;
+  justify-content: space-between;
+  img {
+    // color: red;
+  }
+}
+.navigation {
+  display: flex;
+  align-items: center;
+  padding-top: 0.8%;
+  justify-content: space-around;
 }
 .home-beige {
   background-image: url('/images/vectors/beigeMain.svg');
@@ -67,10 +83,10 @@ header {
 .home-pink {
   background-image: url('/images/vectors/PinkMain.svg');
   background-size: cover; /* Настроить размер фона */
-  height: 94vh;
-  display: flex;
-  
+  height: 92vh;
+ 
 }
+
 footer {
   background-image: url('/images/vectors/beigeFooter.svg');
   background-size: cover; /* Настроить размер фона */

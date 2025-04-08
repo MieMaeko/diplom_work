@@ -12,6 +12,7 @@
   h1 {
     font-size: 128px;
     font-weight: base.$extra-bold;
+    letter-spacing: -5px;
   };
   p {
     font-size: 36px;
@@ -23,6 +24,8 @@
 }
 .first-block-half1 {
   margin-left: 2%;
+  margin-top: 2%;
+  
 }
 .first-block-half2 {
   // background-image: url('/images/vectors/cakeMain.svg');
@@ -34,27 +37,21 @@
   position: relative;
   img {
     position: absolute;
-    // transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 
   }
 }
 .strawberry-cake {
-  // width: 712px;
-  // aspect-ratio: 1 / 1;
-  top: 46%;           
-  left: 47%; 
-  transform: translate(-50%, -50%); 
+  top: 56%;           
+  left: 52%; 
 }
 .vector-cake {
-  // width: 600px;
-  top: 50%;
-  transform: rotate(30deg);           
-  transform: translate(-50%, -50%) rotate(-8deg);
-  left: 50%;  
+  top: 60%;   
+  left: 55%;  
 }
 
 .buttons-cake {
-  margin-top: 4.5%;
+  margin-top: 5.5%;
   display: flex;
   gap: 2%;
   button {
