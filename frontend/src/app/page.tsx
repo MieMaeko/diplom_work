@@ -1,5 +1,4 @@
 import styles from "@/styles/page.module.scss";
-import RootLayout from "@/app/layout";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Sweetlana",

@@ -22,15 +22,21 @@ export default function RootLayout({
       <body>
         <header className={beige1Class}>
           <div className={pink1Class}>
-            <h3>Sweetlana</h3>
-            <nav className="menu">
-              <ul>
-                <li>Каталог</li>
-                <li>Контакты</li>
-                <li>Конструктор торта</li>
-                <li>О нас</li>
-              </ul>
-            </nav>
+            <div className="navigation">
+              <h3>Sweetlana</h3>
+              <nav className="menu">
+                <ul>
+                  <li>Каталог</li>
+                  <li>Контакты</li>
+                  <li>Конструктор торта</li>
+                  <li>О нас</li>
+                </ul>
+              </nav>
+              <div className="header-icons">
+                <img src="/icons/shooping-cart.svg" alt="" />
+                <img src="/icons/profile.svg" alt="" />
+              </div>
+            </div>
           </div>
         </header>
         <main>
