@@ -1,0 +1,15 @@
+$beige-color: #FFF6E7;
+$pink-color: #FFA09A;
+$peach-color:#FFC7B8;
+$darkPeach-color: #E8B48D;
+$brown-color: #B36750;
+$regular: 400;
+$medium:500;
+$semi-bold:600;
+$bold: 700;
+$extra-bold: 800;
+
+@mixin default-menu {
+  font-size: 24px;
+  color: $beige-color;
+}

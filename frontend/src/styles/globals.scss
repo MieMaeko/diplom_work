@@ -1,0 +1,86 @@
+@use "base";
+@font-face {
+  font-family: 'WixMadeDisplay';
+  src: url('/fonts/WixMadeDisplay-Regular.ttf') format('ttf');
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'WixMadeDisplay';
+  src: url('/fonts/WixMadeDisplay-Medium.ttf') format('ttf');
+  font-weight: 500; /* Medium */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'WixMadeDisplay';
+  src: url('/fonts/WixMadeDisplay-SemiBold.ttf') format('ttf');
+  font-weight: 600; /* SemiBold */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'WixMadeDisplay';
+  src: url('/fonts/WixMadeDisplay-Bold.ttf') format('ttf');
+  font-weight: 700; /* Bold */
+  font-style: normal;
+}
+@font-face {
+  font-family: 'WixMadeDisplay';
+  src: url('/fonts/WixMadeDisplay-ExtraBold.ttf') format('ttf');
+  font-weight: 800; /* ExtraBold */
+  font-style: normal;
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'WixMadeDisplay', sans-serif;
+}
+body {
+  background-color: base.$beige-color;
+}
+li {
+  list-style-type: none;
+}
+
+h3 {
+  font-weight: base.$extra-bold;
+  font-size: 48px;
+}
+header {
+  @include base.default-menu;
+  
+}
+.menu {
+  ul {
+    display: flex;
+    gap: 64px;
+  }
+  
+}
+.home-beige {
+  background-image: url('/images/vectors/beigeMain.svg');
+  background-size: cover; /* Настроить размер фона */
+  height: 100vh;
+  position: relative;
+}
+.home-pink {
+  background-image: url('/images/vectors/PinkMain.svg');
+  background-size: cover; /* Настроить размер фона */
+  height: 94vh;
+  display: flex;
+  
+}
+footer {
+  background-image: url('/images/vectors/beigeFooter.svg');
+  background-size: cover; /* Настроить размер фона */
+  height: 900px;
+  @include base.default-menu;
+}
+.footer_back {
+  background-image: url('/images/vectors/pinkFooter.svg');
+  background-size: cover; /* Настроить размер фона */
+  height: 900px;
+  position: relative;
+  top: 50px;
+}
