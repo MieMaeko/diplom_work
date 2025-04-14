@@ -35,22 +35,24 @@
   padding: 0;
   margin: 0;
   font-family: 'WixMadeDisplay', sans-serif;
-}
-body {
-  background-color: base.$beige-color;
-}
-li {
-  list-style-type: none;
-}
-
-h3 {
-  font-weight: base.$extra-bold;
-  font-size: 48px;
-}
-header {
-  @include base.default-menu;
   
 }
+
+body {
+  background-color: base.$beige-color;
+  a,header {
+    text-decoration: none;
+    @include base.default-menu;
+  }
+  li {
+    list-style-type: none;
+  }
+  h3 {
+    font-weight: base.$extra-bold;
+    font-size: 48px;
+  }
+}
+
 .menu {
   
   ul {
@@ -77,10 +79,20 @@ header {
   position: relative;
 }
 .home-pink {
-  background-image: url('/images/vectors/PinkMain.svg');
+  background-image: url('/images/vectors/pinkMain.svg');
   background-size: cover; /* Настроить размер фона */
   height: 92vh;
- 
+}
+.catalog-beige {
+  background-image: url('/images/vectors/beigeCatalog.svg');
+  background-size: cover; /* Настроить размер фона */
+  height: 433px;
+  position: relative;
+}
+.catalog-pink {
+  background-image: url('/images/vectors/pinkCatalog.svg');
+  background-size: cover; /* Настроить размер фона */
+  height: 367px;
 }
 
 footer {
