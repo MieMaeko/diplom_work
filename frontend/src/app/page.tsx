@@ -1,12 +1,15 @@
+
 import styles from "@/styles/page.module.scss";
 import type { Metadata } from "next";
 import Categories from "./components/Categories";
-export const metadata: Metadata = {
-  title: "Sweetlana",
-  description: "Кондитерская",
-};
+
+// export const metadata: Metadata = {
+//   title: "Sweetlana",
+//   description: "Кондитерская",
+// };
 
 export default function HomePage() {
+  
   return (
     <div>
         <section className={styles['first-block']}>
