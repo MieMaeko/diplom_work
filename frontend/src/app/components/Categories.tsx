@@ -51,8 +51,8 @@ const Categories: React.FC<CategoriesProps> = ({type}) =>{
 
   return (
     <div className={styles.categories}>
-      {categories.map((category) => (
-          <Categor key={category.id} category={categoryTranslations[category.category]} img={category.img} type={type} />
+      {categories.map(({id,category, img}) => (
+          <Categor key={id} category={categoryTranslations[category]} img={img} type={type} link={category} />
       ))}
     </div>
   );

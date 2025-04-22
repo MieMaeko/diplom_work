@@ -13,4 +13,8 @@ export class ProductService {
   async findByType(type: string): Promise<Product[]> {
     return this.productRepository.find({ where: { type } });
   }
+
+  async findByTypeAndCategory(type: string, category: string): Promise<Product[]> {
+    return this.productRepository.find({where:{type,category}})
+  }
 }

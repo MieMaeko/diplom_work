@@ -4,11 +4,12 @@ interface CategorProps {
   category: string;
   img: string;
   type: string;
+  link: string
 }
 
-  export default function Categor({ category, img, type }: CategorProps) {
+  export default function Categor({ category, img, type,link }: CategorProps) {
     return (
-      <Link key={category} href={`/catalog/${type}/${category}`}>
+      <Link key={link} href={`/catalog/${type}/${link}`}>
       <div>
         <img src={`images/catalog/${type}/${img}`} alt={category} />
         <p>{category}</p>
