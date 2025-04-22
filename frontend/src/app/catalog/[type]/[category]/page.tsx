@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation';
 import axios from 'axios';
+import styles from "@/styles/catalog.module.scss";
 
 interface Product {
   id: number;
@@ -12,43 +12,39 @@ interface Product {
   img: string;
 }
 
-const CatalogPage = () => {
-  const router = useRouter();
-  const { type, category } = router.query;
-  const [products, setProducts] = useState<Product[]>([]);
-  console.log('hello')
-  console.log(router.query)
-  useEffect(() => {
-    if (type && category) {
-        const url = `api/products/${type}/${category}`;  // Формируем URL
-        console.log('Запрос на URL:', url);  // Выводим URL в консоль
-        axios
-        .get(`api/products/${type}/${category}`)
-        .then((response)=>{
-            setProducts(response.data)
-            console.log(response.data)
-        })
-        .catch((error)=>{
-            console.log('Ошибка запроса', error)
-        })
-    }
-  }, [type, category]);
+export default function CatalogPage () {
+    const { type, category } = useParams();
+    const [products, setProducts] = useState<Product[]>([]);
+    useEffect(() => {
+        if (type && category) {
+            axios
+            .get(`/api/products/${type}/${category}`)
+            .then((response)=>{
+                setProducts(response.data)
+            })
+            .catch((error)=>{
+                console.log('Ошибка запроса', error)
+            })
+        }
+    } , [type, category]);
 
-  return (
+    return (
     <div>
       <h4>Товары в категории: {category}</h4>
-      {/* <div className={styles.products}> */}
-      <div>
+      <div className={styles.products}>
         {products.map(({id,name,price,img}) => (
           <div key={id}>
-            <img src={`images/catalog/${type}/${img}`} alt={name} />
-            <p>{name}</p>
-            <p>{price} руб.</p>
+            <img src={`/images/catalog/${type}/${img}`} alt={name} /> 
+            <div>
+                <p>{name}</p>
+                <p>{price} руб.</p>
+            </div>
+            <button>Оформить</button>
           </div>
         ))}
       </div>
     </div>
-  );
+    );
 };
 
-export default CatalogPage;
+
