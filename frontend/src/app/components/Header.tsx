@@ -6,7 +6,7 @@ export default function Header(){
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const isAboutPage = pathname === "/about";
-  const isCatalog = pathname === '/catalog';
+  const isCatalog = pathname.includes("/catalog");
   const beige1Class = isHomePage ? "home-beige" : isAboutPage ? "about-beige" : isCatalog ? "catalog-beige" : "default-beige";
   const pink1Class = isHomePage ? "home-pink" : isAboutPage ? "about-pink" :  isCatalog ? "catalog-pink" : "default-pink";
   const links = [
