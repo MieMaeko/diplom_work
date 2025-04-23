@@ -1,4 +1,3 @@
-// src/products/product.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('products')
@@ -18,9 +17,6 @@ export class Product {
   @Column()
   type: string;
 
-  @Column()
-  rus_category: string;
-  
   @Column()
   category: string;
 }

@@ -18,4 +18,9 @@ export class ProductController {
   ) {
     return this.productService.findByTypeAndCategory(type, category);
   }
+
+  @Get(':id')
+  async getProductById(@Param('id') id: string) {
+    return this.productService.getProductById(id)
+  }
 }
