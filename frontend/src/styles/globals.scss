@@ -100,11 +100,30 @@ footer {
   background-size: cover; /* Настроить размер фона */
   height: 900px;
   @include base.default-menu;
-}
-.footer_back {
-  background-image: url('/images/vectors/pinkFooter.svg');
-  background-size: cover; /* Настроить размер фона */
-  height: 900px;
-  position: relative;
-  top: 50px;
+  .footer-back {
+    background-image: url('/images/vectors/pinkFooter.svg');
+    background-size: cover; /* Настроить размер фона */
+    height: 900px;
+    position: relative;
+    top: 50px;
+    .footer-content {
+      padding-top: 8%;
+      h3 {
+        margin-left: 2%;
+      }
+      .footer-menu {
+        width: 80%;
+        margin: 15% auto;
+        display: flex;
+        justify-content: space-between;
+        p {
+          font-weight: base.$semi-bold;
+          font-size: 24px;
+          display: grid;
+          gap: 5%;
+        }
+      }
+    }
+    
+  }
 }
