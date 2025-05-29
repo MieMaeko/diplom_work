@@ -1,59 +1,44 @@
-'use client';
-
+'use client'
 import React, { useEffect, useState } from 'react';
 import Categor from './Categor';
 import styles from "@/styles/page.module.scss";
 import axios from 'axios';
 
-// interface Category {
-//   
-// }
 interface CategoriesProps {
   type: string;
 }
 
-interface Product {
+interface Categories {
   id: number;
   name: string;
   img: string;
   type: string;
   category: string;
 }
-const categoryTranslations: { [key: string]: string } = {
-  child: "Детские",
-  biscuit: "Бисквитные",
-  wedding: "Свадебные",
-  gravit: "Антигравитация",
-  ball: "В шаре",
-  muss: "Муссовые",
-  others: "Другие",
-  cupcakes:"Капкейки",
-  pies:"Пирожные",
-  kuliches:"Куличи",
-  sets:"Сеты",
-  desserts:"Десерты",
-  rulets:"Рулеты",
-  breads:"Пряники"
-};
-const Categories: React.FC<CategoriesProps> = ({type}) =>{
-  const [categories, setCategories] = useState<Product[]>([]);
 
-  useEffect(()=>{
+const Categories: React.FC<CategoriesProps> = ({ type }) => {
+  const [categories, setCategories] = useState<Categories[]>([]);
+
+  useEffect(() => {
     axios
-    .get(`/api/products/${type}`)
-    .then((response)=>{
-      setCategories(response.data);
-    })
-    .catch((error)=>{
-      console.log('Error', error);
-    });
-  },[type]);
+      .get(`/api/products/type/${type}`)
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch((error) => {
+        console.log('Error', error);
+      });
+  }, [type]);
 
   return (
     <div className={styles.categories}>
-      {categories.map(({id,category, img}) => (
-          <Categor key={id} category={categoryTranslations[category]} img={img} type={type} link={category} />
-      ))}
+      {categories
+        .filter((value, index, self) =>
+          index === self.findIndex((t) => t.category === value.category)
+        )
+        .map(({ id, category, img }) => (
+          <Categor key={id} category={category} img={img} type={type} />
+        ))}
     </div>
   );
 };

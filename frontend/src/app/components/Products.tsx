@@ -1,37 +1,32 @@
-'use client';
-
-import { useEffect, useState } from "react";
+import styles from "../catalog/[type]/styles/catalog.module.scss";
 import Product from "./Product"
-import axios from "axios";
 
-interface ProductsProps {
-    category: string;  // Пропс для типа категории
-  }
-  export default function Products({ category }: ProductsProps) {
-    const [products, setProducts] = useState<any[]>([]); // Локальное состояние для товаров
+interface ProductType {
+    id: number;
+    name: string;
+    price: number;
+    img: string;
 
-  useEffect(() => {
-    // Получение данных о товарах с бэкенда
-    axios
-      .get(`http://localhost:3000/products?category=${category}`)
-      .then((response) => setProducts(response.data))
-      .catch((error) => console.error("Ошибка при получении товаров:", error));
-  }, [category]); 
-    return (
-      <div>
-        {products
-          .filter((product) => product.category === category) // Фильтрация по категории
-          .map((product) => (
-            <Product
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              img={product.img}
-              type={product.type}
-              price={product.price}
-            />
-          ))}
-      </div>
-    );
   }
   
+  interface ProductsProps {
+    products: ProductType[];
+    type: string;
+  }
+const Products: React.FC<ProductsProps> = ({ products,type }) => {
+
+    return (
+        <div className={styles.products}>
+            {products.length ? (
+                products.map(({ id, name, price, img }) => (
+                    <Product key={id} id={id} name={name} price={price} img={img} type={type}/>))
+            ): 
+            (
+            <p className={styles['no-products']}>Товары не найдены</p>
+              )}
+
+        </div>
+    );
+
+}
+export default Products;

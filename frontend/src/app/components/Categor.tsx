@@ -1,18 +1,23 @@
 import Link from 'next/link';
+import CategorTranslate from './СategorTranslate';
+import Image from 'next/image';
 
 interface CategorProps {
   category: string;
   img: string;
   type: string;
-  link: string
 }
 
-  export default function Categor({ category, img, type,link }: CategorProps) {
+  export default function Categor({ category, img, type}: CategorProps) {
     return (
-      <Link key={link} href={`/catalog/${type}/${link}`}>
+      <Link key={category} href={`/catalog/${type}?category=${category}`}>
       <div>
-        <img src={`images/catalog/${type}/${img}`} alt={category} />
-        <p>{category}</p>
+        <Image 
+        src={`/images/catalog/${type}/${img}`} 
+        alt={category}
+        height={290}
+        width={320}/>
+        <p><CategorTranslate translation={category}/></p>
       </div>
     </Link>
    
