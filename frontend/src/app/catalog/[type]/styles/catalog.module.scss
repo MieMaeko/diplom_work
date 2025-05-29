@@ -1,9 +1,10 @@
-@use "base";
+@use "../../../../styles/base" as *;
+@use "../../../../styles/mixins";
 .catalog {
     h2 {
-        color: base.$beige-color;
+        color: $beige-color;
         font-size: 96px;
-        font-weight: base.$extra-bold;
+        font-weight: $extra-bold;
         position: absolute;
         top: 15%;
         left: 3%;
@@ -15,10 +16,10 @@
         float: right;
         input {
             margin-left: 1%;
-            border: 3px solid base.$brown-color;
+            border: 3px solid $brown-color;
             border-radius: 10px;
             padding: 2%;
-            background-color: base.$beige-color;
+            background-color: $beige-color;
         }
     }
     .products {
@@ -35,8 +36,8 @@
             height: 370px;
         }
         .name-price {
-            color: base.$brown-color;
-            font-weight: base.$semi-bold;
+            color: $brown-color;
+            font-weight: $semi-bold;
             display: flex;
             justify-content: space-between;
             padding: 2%;
@@ -53,9 +54,9 @@
             width: 280px;
             height: 60px;
             font-size: 24px;
-            font-weight: base.$bold;
-            background-color: base.$brown-color;
-            color: base.$beige-color;
+            font-weight: $bold;
+            background-color: $brown-color;
+            color: $beige-color;
             border: none;
             border-radius: 10px;
         }

@@ -1,32 +1,43 @@
 @use "base";
+@use "mixins";
+
 @font-face {
   font-family: 'WixMadeDisplay';
   src: url('/fonts/WixMadeDisplay-Regular.ttf') format('ttf');
-  font-weight: 400; /* Regular */
+  font-weight: 400;
+  /* Regular */
   font-style: normal;
 }
+
 @font-face {
   font-family: 'WixMadeDisplay';
   src: url('/fonts/WixMadeDisplay-Medium.ttf') format('ttf');
-  font-weight: 500; /* Medium */
+  font-weight: 500;
+  /* Medium */
   font-style: normal;
 }
+
 @font-face {
   font-family: 'WixMadeDisplay';
   src: url('/fonts/WixMadeDisplay-SemiBold.ttf') format('ttf');
-  font-weight: 600; /* SemiBold */
+  font-weight: 600;
+  /* SemiBold */
   font-style: normal;
 }
+
 @font-face {
   font-family: 'WixMadeDisplay';
   src: url('/fonts/WixMadeDisplay-Bold.ttf') format('ttf');
-  font-weight: 700; /* Bold */
+  font-weight: 700;
+  /* Bold */
   font-style: normal;
 }
+
 @font-face {
   font-family: 'WixMadeDisplay';
   src: url('/fonts/WixMadeDisplay-ExtraBold.ttf') format('ttf');
-  font-weight: 800; /* ExtraBold */
+  font-weight: 800;
+  /* ExtraBold */
   font-style: normal;
 }
 
@@ -35,95 +46,227 @@
   padding: 0;
   margin: 0;
   font-family: 'WixMadeDisplay', sans-serif;
-  
+
 }
 
 body {
   background-color: base.$beige-color;
-  a,header {
+
+  a,
+  header {
     text-decoration: none;
     @include base.default-menu;
   }
+
   li {
     list-style-type: none;
   }
+
   h3 {
     font-weight: base.$extra-bold;
     font-size: 48px;
+
+    @include mixins.mobile {
+      font-size: 28px;
+    }
   }
 }
 
 .menu {
-  
   ul {
     display: flex;
     gap: 64px;
     font-weight: base.$bold;
+    text-align: center;
+    align-items: center;
+    .li-drop {
+      position: relative;
+      width: 130px;
+      box-sizing: border-box; 
+      border-top: 3px solid transparent;
+      border-left: 3px solid transparent;
+      border-right: 3px solid transparent;
+      border-radius: 10px 10px 0 0;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .li-drop:hover {
+      border-color: base.$beige-color;;
+      cursor: pointer;
+    }
+
+    .drop-menu {
+      display: none;
+      position: absolute;
+      box-sizing: border-box;
+      width: 130px;
+      padding-bottom: 9%;
+      top: 100%;
+      left: -2%;
+      background: base.$pink-color;
+      border-radius: 0 0 10px 10px;
+      border-bottom: 3px solid base.$beige-color;
+      border-left: 3px solid base.$beige-color;
+      border-right: 3px solid base.$beige-color;
+      z-index: 4;
+      .menu-line {
+        width: 100px;
+        height: 3px;
+        background-color: base.$beige-color;
+        border: none;
+        margin: 6% auto;
+      }
+    }
+    .li-drop:hover>.drop-menu {
+      display: block;
+      transition: display 1s;
+    }
+  }
+
+  @include mixins.tablet {
+    display: none;
+  }
+
+  @include mixins.mobile {
+    display: none;
   }
 }
+
+
 .header-icons {
   display: flex;
   width: 130px;
   justify-content: space-between;
+
+  img {
+    cursor: pointer;
+
+    @include mixins.tablet {
+      width: 41px;
+      height: auto;
+    }
+
+    @include mixins.mobile {
+      width: 28px;
+      height: auto;
+    }
+  }
 }
+
 .navigation {
   display: flex;
   align-items: center;
   padding-top: 0.8%;
-  justify-content: space-around;
+  justify-content: space-between;
+  margin: 0 1.2% 0;
+
+  @include mixins.mobile {
+    padding-top: 0%;
+  }
 }
+
+
+
+
 .home-beige {
   background-image: url('/images/vectors/beigeMain.svg');
-  background-size: cover; /* Настроить размер фона */
-  height: 100vh;
+  background-size: cover;
+  height: 95vh;
   position: relative;
+
+  @include mixins.tablet {
+    height: 88vh;
+    background-image: url('/images/vectors/tablet/beigeMain.svg');
+  }
+
+  @include mixins.mobile {
+    background-image: url('/images/vectors/mobile/beigeMain.svg');
+    height: 53vh;
+  }
 }
+
 .home-pink {
   background-image: url('/images/vectors/pinkMain.svg');
-  background-size: cover; /* Настроить размер фона */
-  height: 92vh;
+  background-size: cover;
+  height: 84vh;
+
+  @include mixins.tablet {
+    background-image: url('/images/vectors/tablet/pinkMain.svg');
+    height: 84vh;
+  }
+
+  @include mixins.mobile {
+    background-image: url('/images/vectors/mobile/pinkMain.svg');
+    height: 50vh;
+  }
+
 }
+
 .catalog-beige {
   background-image: url('/images/vectors/beigeCatalog.svg');
-  background-size: cover; /* Настроить размер фона */
+  background-size: cover;
   height: 433px;
   position: relative;
 }
+
 .catalog-pink {
   background-image: url('/images/vectors/pinkCatalog.svg');
-  background-size: cover; /* Настроить размер фона */
+  background-size: cover;
   height: 367px;
+}
+
+.about-beige {
+  background-image: url('/images/vectors/beigeAbout.svg');
+  background-size: cover;
+  height: 408px;
+  position: relative;
+}
+
+.about-pink {
+  background-image: url('/images/vectors/pinkAbout.svg');
+  background-size: cover;
+  height: 378px;
 }
 
 footer {
   background-image: url('/images/vectors/beigeFooter.svg');
-  background-size: cover; /* Настроить размер фона */
+  background-size: cover;
   height: 900px;
   @include base.default-menu;
+
   .footer-back {
     background-image: url('/images/vectors/pinkFooter.svg');
-    background-size: cover; /* Настроить размер фона */
+    background-size: cover;
     height: 900px;
     position: relative;
     top: 50px;
+
     .footer-content {
       padding-top: 8%;
+
       h3 {
         margin-left: 2%;
       }
+
       .footer-menu {
         width: 80%;
         margin: 15% auto;
         display: flex;
         justify-content: space-between;
+
         p {
           font-weight: base.$semi-bold;
           font-size: 24px;
           display: grid;
           gap: 5%;
+
+          @include mixins.tablet {
+            font-size: 3rem;
+          }
+
         }
       }
     }
-    
+
   }
 }

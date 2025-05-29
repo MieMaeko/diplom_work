@@ -1,4 +1,6 @@
-@use "base";
+@use "base" as *;
+@use "mixins";
+
 .first-block {
   width: 100%;
   height: 50vh;
@@ -6,18 +8,43 @@
   position: absolute;
   align-items: center;
   top: 20%;
+  @include mixins.mobile {
+    top: 0;
+  }
   h1, p {
-    color: base.$brown-color;
+    color: $brown-color;
     line-height: 102%
   };
   h1 {
     font-size: 128px;
-    font-weight: base.$extra-bold;
+    font-weight: $extra-bold;
     letter-spacing: -5px;
+    @include mixins.tablet {
+      font-size: 48px; 
+      letter-spacing: 0;
+      span {
+        display: block;
+      }
+    }
+    @include mixins.mobile {
+      font-size: 36px;
+      letter-spacing: 0;
+      
+    }
   };
   p {
     font-size: 36px;
-    font-weight: base.$semi-bold;
+    font-weight: $semi-bold;
+    @include mixins.tablet {
+      font-size: 24px;  
+      width: 90%;
+      margin-top: 3%;
+    }
+    @include mixins.mobile {
+      font-size: 16px;
+      width: 90%;
+      margin-top: 3%;
+    }
   };
   div {
     flex: 1;
@@ -26,76 +53,170 @@
 .first-block-half1 {
   margin-left: 2%;
   margin-top: 2%;
-  
+  @include mixins.tablet {
+    margin-top: 9%;  
+  }
+  @include mixins.mobile {
+     margin-top: 20%; 
+  }
 }
 .first-block-half2 {
   width: 100%;
   height: 50vh;
+  top: auto;
   position: relative;
   img {
-    position: absolute;
+    position: absolute;   
+    left: 50%;
     transform: translate(-50%, -50%);
-
+    @include mixins.tablet {
+      left: 58%;
+    }
+    @include mixins.mobile {
+      left: 58%;
+    } 
   }
 }
 .strawberry-cake {
   top: 56%;           
-  left: 55%; 
-  width: 79%;
+  left: 55%;
+  height: auto;
+  @include mixins.tablet {
+    top: 66%;
+    width: 78%;  
+  }
+  @include mixins.mobile {
+    width: 75%;
+    top: 68%;
+  } 
 }
 .vector-cake {
-  top: 60%;   
-  left: 55%;  
+  top: 60%;
+  height: auto; 
+  @include mixins.tablet {
+    top: 69%;
+    width: 84%;  
+  }
+  @include mixins.mobile {
+    width: 80%;
+    top: 70%;
+  }  
 }
 
 .buttons-cake {
   margin-top: 5.5%;
   display: flex;
   gap: 2%;
+  @include mixins.mobile {
+    flex-wrap: wrap; 
+    button:nth-child(1) {
+      margin-bottom: 4%;
+    }
+  }
   button {
     font-size: 20px;
-    font-weight: base.$medium;
+    font-weight: $medium;
     width: 165px;
     height: 56px;
     border-radius: 10px;
-    border:3px solid base.$brown-color
+    border:3px solid $brown-color;
+    @include mixins.tablet {
+      width: 130px;
+      height: 40px;  
+      font-size: 14px;
+    }
+    @include mixins.mobile {
+      width: 130px; 
+      height: 40px;  
+    }
   }
   .button-contacts {
-    background-color: base.$beige-color;
-    color: base.$brown-color;
+    background-color: $beige-color;
+    color: $brown-color;
+  }
+  .button-contacts:hover {
+    background-color: $brown-color;
+    color: $beige-color;
   }
   .button-delivery {
-    background-color: base.$brown-color;
-    color: base.$beige-color;
+    background-color: $brown-color;
+    color: $beige-color;
+  }
+  .button-delivery:hover {
+    background-color: $beige-color;
+    color: $brown-color;
   }
 }
 .news {
   display: flex;
   justify-content: space-between;
-  font-weight: base.$semi-bold;
+  font-weight: $semi-bold;
   margin-top: 3%;
   margin-bottom: 10%;
+  @include mixins.tablet {
+    margin-top: 5%;
+  }
+  @include mixins.mobile {
+    display: block;
+  }
+  
 }
 .benefits {
   width: 600px;
+  @include mixins.tablet {
+    width: 355px; 
+  }
+  @include mixins.mobile {
+    width: 363px;
+    margin: 0 auto; 
+  }
   .candle {
     position: relative;
+    width: 40px;
     left: 50%;
     top: -8%;
+    @include mixins.tablet {
+      top: -5%;
+    }
+    @include mixins.mobile {
+      margin-bottom: 3%;
+    }
+    img {
+      @include mixins.tablet {
+        width: 11px;
+        height: auto; 
+      }
+    }
   }
   .firstLayerofCake {
     border-top-right-radius: 30px;
+    @include mixins.mobile {
+      border-top-left-radius: 30px;
+    }
   }
   .thirdLayerofCake {
     border-bottom-right-radius: 30px;
+    @include mixins.tablet {
+      border-bottom-right-radius: 18px;
+    }
+    @include mixins.mobile {
+      border-bottom-left-radius: 18px;
+    }
     .groundLayerofCake {
       border-bottom-right-radius: 30px;
+      @include mixins.mobile {
+        border-bottom-left-radius: 30px;
+      }
     }
+    
   }
   .firstLayerofCake, .secondLayerofCake, .thirdLayerofCake{
-    background-color: base.$pink-color;
-    color: base.$beige-color; 
+    background-color: $pink-color;
+    color: $beige-color; 
     font-size: 24px;
+    @include mixins.tablet {
+      font-size: 16px;  
+    }
     .layer-content {
       display: flex;
       gap:2%;
@@ -103,49 +224,119 @@
       margin-left: 4%;
       align-items: center;
       flex-wrap: wrap;
+      @include mixins.tablet {
+        // padding: 0%;
+        // gap: 6%;
+        // height: 69px;  
+        // margin-left: 9%;
+      }
+      @include mixins.mobile {
+        padding: 0%;
+        gap: 6%;
+        height: 69px;  
+        margin-left: 9%;
+      }
+      span {
+        height: auto; 
+        @include mixins.tablet {
+          width: 240px;
+         
+        }
+        @include mixins.mobile {
+          width: 260px;
+        }
+      }
     }
   }
   .groundLayerofCake {
-    background-color: base.$peach-color;
-    width: 600px;
+    background-color: $peach-color;
+    width: auto;
     height: 2.5vh;
     margin-bottom: 3%;
+    // @include mixins.tablet {
+    //   width: 355px;  
+    // }
+    @include mixins.mobile {
+      margin: 0 auto 3%;
+    }
   }
 }
 .newChocolate {
   display: flex;
   align-items: center;
-  
+  @include mixins.tablet {
+      margin-top: 5%;
+    }
+  @include mixins.mobile {
+    padding-top: 10%;
+    justify-content: space-between;
+  }
+  div:nth-child(1) {
+    @include mixins.tablet {
+      position: relative;
+      left: 12%; 
+    }
+  }
   p, button {
-    font-size: 20px;
-    
+    font-size: 20px; 
   }
   p {
     width: 200px;
     margin-bottom: 34px;
-    color: base.$brown-color;
-    
+    color: $brown-color;
+    @include mixins.tablet {
+      font-size: 15px;  
+    }
+    @include mixins.mobile {
+      width: 160px;
+      margin-bottom: 20px;
+    }
   }
   button {
-    color: base.$beige-color;
-    background-color: base.$darkPeach-color;
+    color: $beige-color;
+    background-color: $darkPeach-color;
     width: 190px;
     height: 52px;
     border: none;
     border-radius: 10px;
-    font-weight: base.$semi-bold;
+    font-weight: $semi-bold;
+    @include mixins.tablet {
+      width: 150px;
+      height: 42px;
+    }
   }
   .newChocolateH {
     font-size: 40px;
+    // @include mixins.mobile {
+    //   position: relative;
+    //   left: 50%;
+    //   top: 10%;
+    // }
   }
 }
-.cakes, .desserts {
+.chocolateBar {
+  height: auto;
+  @include mixins.tablet {
+    width: 212px;
+  } 
+  @include mixins.mobile {
+    width: 170px;
+  }
+}
+
+.cakes, .desserts, .builder {
   margin-top: 1%;
-  color: base.$brown-color;
-  font-weight: base.$semi-bold;
+  color: $brown-color;
+  font-weight: $semi-bold;
   text-align: center;
   h4 {
     font-size: 64px;
+    @include mixins.tablet {
+      font-size: 40px;  
+    }
+    @include mixins.mobile {
+      font-size: 40px;  
+    }
     margin-bottom: 5.5%;
   }
   .categories {
@@ -155,10 +346,72 @@
     p {
       font-size: 24px;
       margin-top: 3.8%;
-      color: base.$brown-color;
+      color: $brown-color;
+      @include mixins.tablet {
+        margin-top: 2.8%;
+      }
+      @include mixins.tablet {
+        font-size: 20px; 
+        margin-top: 2.8%;
+      }
     }
     div {
+      @include mixins.tablet {
+        margin-bottom: 14%;
+      }
       margin-bottom: 4%;
+      img {
+        @include mixins.tablet {
+          width: 260px;
+          height: auto; 
+        }
+        @include mixins.mobile {
+          width: 170px;
+          height: auto; 
+        }
+      }
     }
+  }
+}
+.builder {
+  margin-top: 8%;
+  .builder-blocks{
+    display: flex;
+    justify-content: space-around;
+    .blocks-adv {
+      
+      display: flex;
+      p {
+        width: 280px;
+        font-size: 32px;
+        font-weight: $bold;
+        text-align: justify;
+      }
+      p:nth-of-type(2) {
+        font-weight: $regular;
+        font-size: 20px;
+      }
+    }
+    .circle {
+      width: 50px;
+      font-size: 36px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: $pink-color;
+      color: $beige-color;
+      box-shadow: 3px 12px 0px 0px $peach-color;
+    }
+    
+  }
+  button {
+    margin-top: 80px;
+    background-color: $brown-color;
+    width: 250px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: $bold;
+    color: $beige-color;
+    border: none;
+    border-radius: 10px;
   }
 }

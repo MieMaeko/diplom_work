@@ -1,0 +1,13 @@
+@use "../../../styles/base" as *;
+@use "../../../styles/mixins";
+.builder {
+    h3 {
+        color: $beige-color;
+        font-size: 64px;
+        font-weight: $extra-bold;
+        position: absolute;
+        top: 14%;
+        left: 2%;
+        z-index: 3;
+    }
+}

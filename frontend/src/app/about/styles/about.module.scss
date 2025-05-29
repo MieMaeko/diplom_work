@@ -1,0 +1,41 @@
+@use "../../../styles/base" as *;
+@use "../../../styles/mixins";
+.about {
+    h3 {
+        color: $beige-color;
+        font-size: 64px;
+        font-weight: $extra-bold;
+        position: absolute;
+        top: 14%;
+        left: 2%;
+        z-index: 3;
+    }
+    h4,p {
+        text-align: center;
+    }
+    h4 {
+        color: $pink-color;
+    }
+    .info {
+        h4,p {
+            font-weight: $bold;
+            margin: 2% auto;
+            width: 90%;
+        }
+        h4 {
+            font-size: 96px;
+            text-shadow: 8px 8px #FFC7B8;
+            // text-shadow: 10px 3px #FFC7B8;
+        }
+        p {
+            font-size: 36px;
+            color: $brown-color;
+        }
+    }
+    .sertificates {
+        h4 {
+            font-size: 64px;
+            font-weight: $bold;
+        }
+    }
+}
