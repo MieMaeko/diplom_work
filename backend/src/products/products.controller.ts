@@ -5,13 +5,17 @@ import { Product } from './product.entity';
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
-
-  @Get(':type')
+  @Get('product/:id')
+  async getProductById(@Param('id') id: number): Promise<Product> {
+    return this.productService.findProductById(id);
+  }
+  
+  @Get('type/:type')
   async getProductsByType(@Param('type') type: string): Promise<Product[]> {
     return this.productService.findByType(type);
   }
 
-  @Get(':type/:category')
+  @Get('type/:type/category/:category')
   async getProductsByTypeAndCategory(
     @Param('type') type: string,
     @Param('category') category: string
@@ -19,8 +23,5 @@ export class ProductController {
     return this.productService.findByTypeAndCategory(type, category);
   }
 
-  @Get(':id')
-  async getProductById(@Param('id') id: string) {
-    return this.productService.getProductById(id)
-  }
+ 
 }

@@ -18,7 +18,13 @@ export class ProductService {
     return this.productRepository.find({where:{type,category}})
   }
 
-  async getProductById(id:string): Promise<Product[]> {
-    return this.productRepository.find({where: { id: +id}})
+  async findProductById(id: number): Promise<Product> {
+    const product = await this.productRepository.findOne({ where: { id } });
+
+    if (!product) {
+      throw new Error(`Продукт с ID ${id} не найден`);
+    }
+
+    return product;
   }
 }
