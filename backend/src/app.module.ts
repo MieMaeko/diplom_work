@@ -2,6 +2,13 @@ import { Module } from '@nestjs/common';
 import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products/product.entity';
+import { User } from './users/user.entity';
+import { UserModule } from './users/users.module';
+import { Filling } from './filling/filling.entity';
+import { FillingModule } from './filling/filling.module';
+import { Order } from './orders/order.entity';
+import { OrdersModule } from './orders/orders.module';
+import { SessionModule } from 'nestjs-session';
 
 @Module({
   imports: [
@@ -12,10 +19,16 @@ import { Product } from './products/product.entity';
       username: 'root',
       password: '1234',
       database: 'sweetlana',
-      entities: [Product],
+      entities: [Product, User, Filling, Order],
       synchronize: false,
     }),
-    ProductsModule,
+    ProductsModule, 
+    UserModule,
+    FillingModule, 
+    OrdersModule,
+    SessionModule.forRoot({
+      session: { secret: 'your-secret-key', resave: false, saveUninitialized: false },
+    }),
   ],
 })
 export class AppModule {}
