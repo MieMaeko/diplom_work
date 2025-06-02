@@ -33,9 +33,25 @@
         }
     }
     .sertificates {
+        margin-top: 8%;
         h4 {
             font-size: 64px;
             font-weight: $bold;
         }
+        .sertificatesImages {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: space-around;
+            margin: 0 auto;
+            width: 90%;
+            img {
+                width: auto;
+                margin-top: 5%;
+                height: 400px;
+            }
+        }
+    
+        
     }
 }
+

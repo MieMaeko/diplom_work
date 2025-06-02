@@ -44,11 +44,13 @@ export default function CartPage() {
                 const response = await axios.get('/api/user/profile', { withCredentials: true })
                 if (response.data) {
                     setUserData(response.data);
+                    console.log('User profile data:', response.data);
                     setFormData((prevData) => ({
                         ...prevData,
-                        name: response.data.name,
+                        name: response.data.name || '',
                         phone: response.data.phone || '',
                         email: response.data.email || '',
+
                     }));
                 } else {
                     console.log('User not authenticated');
@@ -76,8 +78,8 @@ export default function CartPage() {
         if (isAuthenticated) {
             const orderData = {
                 user_id: userData.id,
-                user_name: userData.name,
-                user_phone: userData.phone,
+                user_name: userData.name || formData.name,
+                user_phone: userData.phone || formData.phone,
                 user_email: formData.email,
                 address: formData.address,
                 delivery_date: formData.deliveryDate,

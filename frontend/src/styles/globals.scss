@@ -1,6 +1,8 @@
 @use "base";
 @use "mixins";
 
+
+
 @font-face {
   font-family: 'WixMadeDisplay';
   src: url('/fonts/WixMadeDisplay-Regular.ttf') format('ttf');
@@ -79,10 +81,11 @@ body {
     font-weight: base.$bold;
     text-align: center;
     align-items: center;
+
     .li-drop {
       position: relative;
       width: 130px;
-      box-sizing: border-box; 
+      box-sizing: border-box;
       border-top: 3px solid transparent;
       border-left: 3px solid transparent;
       border-right: 3px solid transparent;
@@ -91,7 +94,8 @@ body {
     }
 
     .li-drop:hover {
-      border-color: base.$beige-color;;
+      border-color: base.$beige-color;
+      ;
       cursor: pointer;
     }
 
@@ -109,6 +113,7 @@ body {
       border-left: 3px solid base.$beige-color;
       border-right: 3px solid base.$beige-color;
       z-index: 4;
+
       .menu-line {
         width: 100px;
         height: 3px;
@@ -117,6 +122,7 @@ body {
         margin: 6% auto;
       }
     }
+
     .li-drop:hover>.drop-menu {
       display: block;
       transition: display 1s;
@@ -269,4 +275,9 @@ footer {
     }
 
   }
+}
+#map {
+  margin: 5% auto;
+  width: 800px;
+  height: 400px;
 }

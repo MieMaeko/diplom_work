@@ -1,11 +1,11 @@
-import { Controller, Post, Body, Get, Session } from '@nestjs/common';
+import { Controller, Post, Body, Get, Session, Put, Param, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './order.entity';
-
+import { UpdateOrderStatusDto } from './dto/update-order.dto';
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) { }
 
   @Post()
   async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
@@ -18,7 +18,7 @@ export class OrdersController {
     }
   }
 
-  @Get('my') 
+  @Get('my')
   async getMyOrders(@Session() session: Record<string, any>) {
     if (!session.userId) {
       return { message: 'User not authenticated' };
@@ -27,5 +27,16 @@ export class OrdersController {
     const orders = await this.ordersService.getOrdersByUserId(session.userId);
     return orders;
   }
+  @Get()
+  async getAll(@Query('filter') filter?: string) {
+    return this.ordersService.getOrders(filter);
+  }
 
+  @Put(':id/status')
+  async updateStatus(
+    @Param('id') id: number,
+    @Body() body: UpdateOrderStatusDto,
+  ) {
+    return this.ordersService.updateOrderStatus(+id, body.status);
+  }
 }

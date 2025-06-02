@@ -1,8 +1,17 @@
-import { IsNumber, IsString, IsArray } from 'class-validator';
-
+import { IsNumber, IsString, IsArray, IsEnum } from 'class-validator';
+import { OrderStatus } from './order-status.enum';
 export class CreateOrderDto {
   @IsNumber()
   user_id: number;
+
+  @IsString()
+  user_name: string;
+
+  @IsString()
+  user_phone: string;
+
+  @IsString()
+  user_email: string;
 
   @IsString()
   address: string;
@@ -16,11 +25,8 @@ export class CreateOrderDto {
   @IsNumber()
   total_price: number;
 
-  @IsString()
-  status: string;
-
-  @IsString()
-  payment_status: string;
+  @IsEnum(OrderStatus)
+  status: OrderStatus;
 
   @IsArray()
   items: any[];

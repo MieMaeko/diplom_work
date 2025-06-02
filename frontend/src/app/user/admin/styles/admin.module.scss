@@ -1,0 +1,35 @@
+@use "../../../../styles/base" as *;
+@use "../../../../styles/mixins";
+
+.admin-work {
+    h3 {
+        color: $beige-color;
+        font-size: 64px;
+        font-weight: $extra-bold;
+        position: absolute;
+        top: 14%;
+        left: 2%;
+        z-index: 3;
+    }
+
+    .helper {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 1000;
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .helper button {
+        cursor: pointer;
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+}

@@ -22,7 +22,7 @@ export default function Header() {
     },
     {
       name: 'Контакты',
-      href: '/contacts'
+      href: '/about#delivery'
     },
     {
       name: 'Конструктор торта',
@@ -57,26 +57,34 @@ export default function Header() {
   ]
   const [showForm, setShowForm] = useState(false);
   const [isReg, setIsReg] = useState(true);
-  const [user, setUser] = useState<any>(null); 
+  const [user, setUser] = useState<any>(null);
   const [itemCount, setItemCount] = useState(0);
-  const router = useRouter();  
+  const [scrollToDelivery, setScrollToDelivery] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
+    if (scrollToDelivery && pathname === "/about") {
+      const timeout = setTimeout(() => {
+        document.getElementById("delivery")?.scrollIntoView({ behavior: "smooth" });
+        setScrollToDelivery(false);
+      }, 100); 
+      return () => clearTimeout(timeout);
+    }
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get('/api/user/profile', { withCredentials: true }); 
+        const response = await axios.get('/api/user/profile', { withCredentials: true });
         if (response.data?.id) {
-          setUser(response.data);  
+          setUser(response.data);
         } else {
-          setUser(null);  
+          setUser(null);
         }
       } catch (error) {
         console.log('Error fetching user profile', error);
-        setUser(null);  
+        setUser(null);
       }
     };
-    fetchUserProfile();  
-  }, []);
+    fetchUserProfile();
+  }, [pathname, scrollToDelivery]);
 
   const handleProfileClick = () => {
     if (user) {
@@ -85,9 +93,17 @@ export default function Header() {
       setShowForm(true);
     }
   };
+  const handleScroll = () => {
+    if (pathname !== "/about") {
+      setScrollToDelivery(true);
+      router.push("/about");
+    } else {
+      document.getElementById("delivery")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const handleSubmit = () => {
-    setShowForm(false); 
+    setShowForm(false);
   };
   return (
     <header className={beige1Class}>
@@ -97,7 +113,7 @@ export default function Header() {
             <h3>Sweetlana</h3>
           </Link>
           <nav className="menu">
-            <NavLinks links={links} />
+            <NavLinks links={links} handleScroll={handleScroll} />
           </nav>
           <div className="header-icons">
             <div style={{ position: 'relative' }}>
