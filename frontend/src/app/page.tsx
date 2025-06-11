@@ -132,7 +132,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <button><Link href='/builder'>Перейти</Link></button>
+        <button className={styles['button-builder']}><Link href='/builder'>Перейти</Link></button>
       </section>
     </div>
 

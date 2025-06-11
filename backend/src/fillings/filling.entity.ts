@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('filling')
+@Entity('fillings')
 export class Filling {
   @PrimaryGeneratedColumn()
-  id_filling: number;
+  id: number;
 
   @Column()
   name: string;

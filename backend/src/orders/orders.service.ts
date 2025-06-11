@@ -4,29 +4,31 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
-
+import { User } from '../users/user.entity';
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) { }
 
   async createOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-    try {
-      const order = this.ordersRepository.create(createOrderDto);
-      return await this.ordersRepository.save(order);
-    } catch (error) {
-      console.error('Ошибка при сохранении заказа:', error);
-      throw new Error('Ошибка при сохранении заказа');
-    }
-  }
-  async getOrdersByUserId(userId: number): Promise<Order[]> {
-    return await this.ordersRepository.find({
-      where: { user_id: userId },
-      order: { orders_id: 'DESC' },
+    const { user_id, items, ...orderData } = createOrderDto;
+
+    const user = await this.userRepository.findOne({ where: { id: user_id } });
+    if (!user) throw new Error('Пользователь не найден');
+
+    const order = this.ordersRepository.create({
+      ...orderData,
+      user,
+      items,
     });
+
+    return await this.ordersRepository.save(order);
   }
+
 
   async getOrders(filter?: string): Promise<Order[]> {
     if (filter === 'planned') {
@@ -37,11 +39,21 @@ export class OrdersService {
           { status: OrderStatus.В_ДОСТАВКЕ },
         ],
         order: { delivery_date: 'ASC' },
+        relations: ['user', 'items', 'items.product', 'items.filling'],
+      });
+    }
+
+    if (filter === 'done') {
+      return await this.ordersRepository.find({
+        where: [{ status: OrderStatus.ДОСТАВЛЕН }],
+        order: { delivery_date: 'ASC' },
+        relations: ['user', 'items', 'items.product', 'items.filling'],
       });
     }
 
     return await this.ordersRepository.find({
       order: { delivery_date: 'DESC' },
+      relations: ['user', 'items', 'items.product', 'items.filling'],
     });
   }
 
@@ -49,5 +61,4 @@ export class OrdersService {
     await this.ordersRepository.update(id, { status });
     return { success: true };
   }
-
 }

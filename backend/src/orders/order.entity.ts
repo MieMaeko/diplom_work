@@ -1,12 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn,Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { User } from '../users/user.entity';
+import { OrderItem } from './order-item.entity'; 
 
 @Entity('orders')
 export class Order {
   @PrimaryGeneratedColumn()
-  orders_id: number;
+  order_id: number;
 
-  @Column()
-  user_id: number;
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   user_name: string;
@@ -14,25 +17,27 @@ export class Order {
   @Column()
   user_phone: string;
 
-  @Column({ unique: true })
+  @Column()
   user_email: string;
 
   @Column()
   address: string;
 
-  @Column()
+  @Column({ type: 'date' })
   delivery_date: string;
 
   @Column()
   delivery_method: string;
 
-  @Column()
+  @Column({ type: 'float' })
   total_price: number;
 
   @Column()
   status: string;
 
-  @Column('json')
-  items: any[];
-  
+  @Column({ nullable: true })
+  comment: string;
+
+  @OneToMany(() => OrderItem, item => item.order, { cascade: true })
+  items: OrderItem[];
 }

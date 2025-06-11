@@ -14,9 +14,11 @@
         width: 300px;
         gap: 5%;
     }
+
     .avatar {
         position: relative;
     }
+
     .circle-avatar {
         border-radius: 50%;
         background-color: $peach-color;
@@ -24,12 +26,14 @@
         width: 180px;
         height: 180px;
         text-align: center;
+
         img {
             margin-top: 8%;
             width: auto;
             height: 140px;
         }
     }
+
     .circle-change {
         border-radius: 50%;
         background-color: white;
@@ -39,15 +43,36 @@
         text-align: center;
         width: 50px;
         height: 50px;
+
         img {
             width: 70%;
             margin: -5% auto;
         }
     }
+
     h3 {
         font-size: 64px;
         font-weight: $extra-bold;
 
+    }
+
+    .settings-button {
+        width: auto;
+        padding: 2% 2% 2% 2%;
+        margin-top: 7%;
+        border-radius: 6px;
+        height: 40px;
+        color: white;
+        border: none;
+        font-weight: $semi-bold;
+        font-size: 14px;
+        background-color: $darkPeach-color;
+    }
+
+    .settings-button:hover {
+        background-color: white;
+        color: $darkPeach-color;
+        border: 2px solid $darkPeach-color;
     }
 
     .profile-info {
@@ -63,41 +88,29 @@
                 font-size: 16px;
                 font-weight: $regular;
                 color: #1F2937;
-                
+
                 span:nth-of-type(2) {
                     color: #4B5563;
                 }
             }
+
             hr {
                 margin: 24px 0 24px;
                 background-color: #F3F4F6;
             }
+
             width: 500px;
             padding: 3%;
-            .settings-button {
-                width: auto;
-                padding: 2% 2% 2% 2%;
-                margin-top: 7%;
-                border-radius: 6px;
-                height: 40px;
-                color: white;
-                border: none;
-                font-weight: $semi-bold;
-                font-size: 14px;
-                background-color: $darkPeach-color;
-            }
-            .settings-button:hover {
-                background-color: white;
-                color: $darkPeach-color;
-                border: 2px solid $darkPeach-color;
-            }
+
         }
+
         .orders {
             table {
                 tr {
                     text-align: center;
                 }
             }
+
             width: 90%;
         }
     }

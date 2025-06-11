@@ -1,33 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {Connection} from 'typeorm'
+import { Connection } from 'typeorm'
 import * as session from 'express-session';
+import { corsOptions } from './config/cors.config';
+import { validationPipe } from './config/validation.config';
+import { sessionOptions } from './config/session.config';
+import { checkDatabaseConnection } from './utils/database.util';
+checkDatabaseConnection
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors({
-    origin: 'http://localhost:3000',  
-    credentials: true, 
-  }); 
-  app.use(
-    session({
-      secret: 'your-secret-key', 
-      resave: false,
-      saveUninitialized: true,
-      cookie: { secure: false },  
-    }),
-  );
-
+  app.enableCors(corsOptions);
+  app.use(session(sessionOptions));
+  app.useGlobalPipes(validationPipe);
   const connection = app.get(Connection);
-  try {
-    await connection.query('SELECT 1');
-    console.log('Подключение к базе данных успешно!');
+  await checkDatabaseConnection(connection);
 
-    await app.listen(3001); 
-  } catch (error) {
-    console.error('Ошибка подключения к базе данных:', error);
-  }
-
+  await app.listen(3001);
 }
 
 bootstrap();

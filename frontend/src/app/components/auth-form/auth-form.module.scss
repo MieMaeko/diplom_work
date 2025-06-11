@@ -2,6 +2,20 @@
 @use "../../../styles/mixins";
 
 .modal {
+    .pinkInput {
+        color: #ff69b4; // текст поля
+        border: 1px solid #ffb6c1;
+        padding: 10px;
+        width: 100%;
+        margin-bottom: 10px;
+        background-color: #fff;
+
+        &::placeholder {
+            color: #ff69b4; // розовый плейсхолдер
+            opacity: 1; // на всякий случай
+        }
+    }
+
     position: fixed;
     top: 0;
     left: 0;
@@ -13,14 +27,16 @@
     align-items: center; // Центрируем содержимое по горизонтали
     justify-content: center; // Центрируем по вертикали, если нужно
     z-index: 4;
+
     img {
         margin-top: -0.1%;
         z-index: 3;
         width: 800px;
     }
+
     .modal-content {
         background-color: $beige-color;
-        border-radius: 8px 8px 0 0; 
+        border-radius: 8px 8px 0 0;
         // border-radius: 8px;
         width: 55%;
         // width: 780px;
@@ -31,6 +47,16 @@
         flex-direction: column;
         align-items: center;
         font-weight: $extra-bold;
+
+        @include mixins.tablet {
+            width: 20%;
+        }
+
+        @include mixins.mobile {
+            width: 20%;
+            height: 300px;
+        }
+
         .close-form {
             position: absolute;
             top: 15px;
@@ -43,22 +69,32 @@
         .close-form:hover {
             color: #333;
         }
+
         .modalH {
             font-size: 96px;
             color: $brown-color;
             text-shadow: 3px 12px #FFC7B8;
             margin-bottom: 44px;
             margin-top: 55px;
+
+            @include mixins.mobile {
+                font-size: 30px;
+            }
+
         }
-        form { 
+
+        form {
             margin: 0 auto;
             text-align: center;
             width: 90%;
-            input, button {
+
+            input,
+            button {
                 border-radius: 20px;
                 font-size: 30px;
                 font-weight: $extra-bold;
             }
+
             input {
                 border: 5px solid $peach-color;
                 color: $pink-color;
@@ -70,6 +106,7 @@
                 background-color: $beige-color;
                 margin-bottom: 2%;
             }
+
             button {
                 width: 540px;
                 background-color: $pink-color;
@@ -78,9 +115,10 @@
                 border: none;
                 margin-top: 44px;
             }
-            
+
         }
     }
+
     .law {
         color: $peach-color;
         font-size: 20px;
@@ -88,12 +126,14 @@
         margin: 4% auto;
         text-align: center;
     }
+
     .image-container {
-        width: 55%; 
+        width: 55%;
+
         img {
-            width: 100%; 
-            height: auto; 
-          }
-      }
-      
+            width: 100%;
+            height: auto;
+        }
+    }
+
 }

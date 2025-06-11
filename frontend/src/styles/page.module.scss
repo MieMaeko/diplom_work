@@ -9,7 +9,8 @@
   align-items: center;
   top: 20%;
   @include mixins.mobile {
-    top: 0;
+    height: 10vh;
+
   }
   h1, p {
     color: $brown-color;
@@ -19,17 +20,24 @@
     font-size: 128px;
     font-weight: $extra-bold;
     letter-spacing: -5px;
+    span {
+    margin-right: 4%;
+    }
     @include mixins.tablet {
       font-size: 48px; 
       letter-spacing: 0;
       span {
         display: block;
+        margin: 0;
       }
     }
     @include mixins.mobile {
       font-size: 36px;
       letter-spacing: 0;
-      
+      span {
+        display: block;
+        margin: 0;
+      }
     }
   };
   p {
@@ -54,7 +62,7 @@
   margin-left: 2%;
   margin-top: 2%;
   @include mixins.tablet {
-    margin-top: 9%;  
+    margin-top: 3%;  
   }
   @include mixins.mobile {
      margin-top: 20%; 
@@ -67,39 +75,38 @@
   position: relative;
   img {
     position: absolute;   
-    left: 50%;
+    left: 55%;
     transform: translate(-50%, -50%);
     @include mixins.tablet {
-      left: 58%;
+      left: 60%;
     }
     @include mixins.mobile {
-      left: 58%;
+      left: 59%;
     } 
   }
 }
 .strawberry-cake {
-  top: 56%;           
-  left: 55%;
+  top: 58%;           
   height: auto;
   @include mixins.tablet {
-    top: 66%;
-    width: 78%;  
+    top: 52%;
+    width: 70%;  
   }
   @include mixins.mobile {
-    width: 75%;
-    top: 68%;
+    width: 70%;
+    top: 63%;
   } 
 }
 .vector-cake {
-  top: 60%;
+  top: 62%;
   height: auto; 
   @include mixins.tablet {
-    top: 69%;
-    width: 84%;  
+    top: 55%;
+    width: 76%;  
   }
   @include mixins.mobile {
-    width: 80%;
-    top: 70%;
+    width: 75%;
+    top: 65%;
   }  
 }
 
@@ -323,7 +330,6 @@
     width: 170px;
   }
 }
-
 .cakes, .desserts, .builder {
   margin-top: 1%;
   color: $brown-color;
@@ -373,22 +379,28 @@
     }
   }
 }
+.desserts {
+  margin-top: 5%;
+}
 .builder {
   margin-top: 8%;
   .builder-blocks{
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     .blocks-adv {
-      
       display: flex;
+      justify-content: space-between;
+      width: 280px;
       p {
-        width: 280px;
+        width: 210px;
         font-size: 32px;
         font-weight: $bold;
-        text-align: justify;
+        text-align: left;
       }
       p:nth-of-type(2) {
         font-weight: $regular;
+        margin-top: 10px;
         font-size: 20px;
       }
     }
@@ -399,19 +411,26 @@
       border-radius: 50%;
       background-color: $pink-color;
       color: $beige-color;
-      box-shadow: 3px 12px 0px 0px $peach-color;
+      box-shadow: -8px 0px 0px 0px $peach-color;
     }
     
   }
-  button {
+  .button-builder {
     margin-top: 80px;
     background-color: $brown-color;
     width: 250px;
     height: 50px;
     font-size: 20px;
     font-weight: $bold;
-    color: $beige-color;
     border: none;
     border-radius: 10px;
+  }
+  
+  .button-builder:hover {
+    border: 4px solid $brown-color;
+    background-color: $beige-color;
+    a {
+      color: $brown-color;
+    }
   }
 }

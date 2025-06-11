@@ -18,15 +18,6 @@ export class OrdersController {
     }
   }
 
-  @Get('my')
-  async getMyOrders(@Session() session: Record<string, any>) {
-    if (!session.userId) {
-      return { message: 'User not authenticated' };
-    }
-
-    const orders = await this.ordersService.getOrdersByUserId(session.userId);
-    return orders;
-  }
   @Get()
   async getAll(@Query('filter') filter?: string) {
     return this.ordersService.getOrders(filter);

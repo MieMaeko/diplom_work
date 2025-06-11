@@ -1,5 +1,24 @@
-import { IsNumber, IsString, IsArray, IsEnum } from 'class-validator';
+import { IsNumber, IsString, IsArray, IsEnum, ValidateNested, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 import { OrderStatus } from './order-status.enum';
+
+class OrderItemDto {
+  @IsNumber()
+  productId: number;
+
+  @IsNumber()
+  fillingId: number;
+
+  @IsNumber()
+  quantity: number;
+
+  @IsNumber()
+  weight: number;
+
+  @IsNumber()
+  price: number;
+}
+
 export class CreateOrderDto {
   @IsNumber()
   user_id: number;
@@ -28,6 +47,12 @@ export class CreateOrderDto {
   @IsEnum(OrderStatus)
   status: OrderStatus;
 
+  @IsOptional()
+  @IsString()
+  comment?: string;
+
   @IsArray()
-  items: any[];
+  @ValidateNested({ each: true })
+  @Type(() => OrderItemDto)
+  items: OrderItemDto[];
 }

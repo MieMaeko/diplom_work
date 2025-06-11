@@ -54,9 +54,12 @@
 body {
   background-color: base.$beige-color;
 
-  a,
-  header {
+  a {
     text-decoration: none;
+    color: base.$beige-color
+  }
+
+  header {
     @include base.default-menu;
   }
 
@@ -69,7 +72,7 @@ body {
     font-size: 48px;
 
     @include mixins.mobile {
-      font-size: 28px;
+      font-size: 24px;
     }
   }
 }
@@ -85,6 +88,7 @@ body {
     .li-drop {
       position: relative;
       width: 130px;
+      top: -1.6px;
       box-sizing: border-box;
       border-top: 3px solid transparent;
       border-left: 3px solid transparent;
@@ -105,8 +109,8 @@ body {
       box-sizing: border-box;
       width: 130px;
       padding-bottom: 9%;
-      top: 100%;
-      left: -2%;
+      top: 98%;
+      left: -2.1%;
       background: base.$pink-color;
       border-radius: 0 0 10px 10px;
       border-bottom: 3px solid base.$beige-color;
@@ -143,9 +147,14 @@ body {
   display: flex;
   width: 130px;
   justify-content: space-between;
-
+  z-index: 1000;
   img {
     cursor: pointer;
+
+    @include mixins.desktop {
+      width: 48px;
+      height: auto;
+    }
 
     @include mixins.tablet {
       width: 41px;
@@ -156,6 +165,8 @@ body {
       width: 28px;
       height: auto;
     }
+
+
   }
 }
 
@@ -167,8 +178,13 @@ body {
   margin: 0 1.2% 0;
 
   @include mixins.mobile {
-    padding-top: 0%;
+    margin: 0 4% 0;
   }
+
+  @include mixins.tablet {
+      margin: 0 2% 0;
+  }
+
 }
 
 
@@ -177,24 +193,24 @@ body {
 .home-beige {
   background-image: url('/images/vectors/beigeMain.svg');
   background-size: cover;
-  height: 95vh;
+  height: 99vh;
   position: relative;
 
   @include mixins.tablet {
-    height: 88vh;
+    height: 89vh;
     background-image: url('/images/vectors/tablet/beigeMain.svg');
   }
 
   @include mixins.mobile {
     background-image: url('/images/vectors/mobile/beigeMain.svg');
-    height: 53vh;
+    height: 51vh;
   }
 }
 
 .home-pink {
   background-image: url('/images/vectors/pinkMain.svg');
   background-size: cover;
-  height: 84vh;
+  height: 91vh;
 
   @include mixins.tablet {
     background-image: url('/images/vectors/tablet/pinkMain.svg');
@@ -237,15 +253,41 @@ body {
 footer {
   background-image: url('/images/vectors/beigeFooter.svg');
   background-size: cover;
-  height: 900px;
+  height: auto;
   @include base.default-menu;
+
+  @include mixins.mobile {
+    background-image: url('/images/vectors/mobile/beigeFooter.svg');
+    // font-size: 5px;
+  }
+
+  @include mixins.tablet {
+    background-image: url('/images/vectors/mobile/beigeFooter.svg');
+  }
+
+  @include mixins.desktop {
+    width: auto;
+    background-size: auto;
+    font-size: 10px;
+  }
 
   .footer-back {
     background-image: url('/images/vectors/pinkFooter.svg');
     background-size: cover;
-    height: 900px;
+    height: auto;
     position: relative;
     top: 50px;
+
+    @include mixins.mobile {
+      background-image: url('/images/vectors/mobile/pinkFooter.svg');
+
+    }
+
+    @include mixins.tablet {
+      width: auto;
+      background-size: auto;
+    }
+
 
     .footer-content {
       padding-top: 8%;
@@ -255,27 +297,58 @@ footer {
       }
 
       .footer-menu {
+        flex-wrap: wrap;
+
+        @include mixins.mobile {
+          a {
+            font-size: 5px;
+          }
+        }
+
+        .icons {
+          display: flex;
+          justify-content: space-around;
+        }
+
+        a {
+          // font-size: 24px; //ffff
+          font-weight: base.$semi-bold;
+        }
+
         width: 80%;
         margin: 15% auto;
         display: flex;
         justify-content: space-between;
 
-        p {
-          font-weight: base.$semi-bold;
-          font-size: 24px;
-          display: grid;
-          gap: 5%;
-
-          @include mixins.tablet {
-            font-size: 3rem;
+        .footer-categories {
+          a {
+            // font-size: 16px;
+            font-weight: base.$medium;
           }
 
         }
+
+        p {
+          line-height: 30px;
+          margin-bottom: 8%;
+          font-size: 5px; //ff
+          // @include mixins.tablet {
+          //   font-size: 3rem;
+          // }
+
+        }
+      }
+
+      .rights {
+        text-align: center;
+        margin: 0 auto;
+        padding-bottom: 2%;
       }
     }
 
   }
 }
+
 #map {
   margin: 5% auto;
   width: 800px;

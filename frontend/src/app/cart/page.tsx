@@ -6,16 +6,23 @@ import axios from 'axios';
 import Image from 'next/image';
 import styles from './styles/cart.module.scss'
 
+
 interface CartItem {
-    id: number;
+    uid: string;
+    productId: number;
     name: string;
     price: number;
     quantity: number;
     weight: number;
+    type: string;
     img: string;
+    fillingId: number;
+    filling: string;
+    addons: string[];
 }
 export default function CartPage() {
     const [cart, setCart] = useState<CartItem[]>([]);
+    const [showModal, setShowModal] = useState(false);
     const [totalPrice, setTotalPrice] = useState(0);
     const [userData, setUserData] = useState<any>(null);
     const [formData, setFormData] = useState({
@@ -59,12 +66,27 @@ export default function CartPage() {
                 console.log('Error fetching user profile', error);
             }
         };
+
+        if (showModal) {
+            const timer = setTimeout(() => {
+                router.push('/user/profile');
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
         fetchCart();
         fetchUserProfile();
-    }, []);
+    }, [showModal]);
 
+    const handleChangeQuantity = async (uid: string, delta: number) => {
+        const updated = cart.map(item =>
+            item.uid === uid ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
+        );
+        await localforage.setItem('cart', updated);
+        setCart(updated);
+        setTotalPrice(updated.reduce((sum, i) => sum + i.price * i.quantity, 0));
+    };
     const handleRemoveItem = async (itemId: number) => {
-        const updatedCart = cart.filter((item) => item.id !== itemId);
+        const updatedCart = cart.filter((item) => item.productId !== itemId);
         await localforage.setItem('cart', updatedCart);
         setCart(updatedCart);
         const total = updatedCart.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0);
@@ -74,7 +96,6 @@ export default function CartPage() {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         const isAuthenticated = userData && userData.id;
-        console.log(userData.name)
         if (isAuthenticated) {
             const orderData = {
                 user_id: userData.id,
@@ -86,13 +107,34 @@ export default function CartPage() {
                 delivery_method: formData.deliveryMethod,
                 total_price: totalPrice,
                 status: 'оформлен',
-                items: cart,
+                comment: formData.comment,
+                items: cart.map(item => ({
+                    productId: item.productId,
+                    fillingId: item.fillingId,
+                    addons: item.addons,
+                    quantity: item.quantity,
+                    weight: item.weight,
+                    price: item.price,
+                }))
             };
+
             console.log(orderData)
             try {
                 await axios.post('/api/orders', orderData);
-                alert('Заказ оформлен');
-                router.push('/user/profile');
+                await localforage.removeItem('cart');
+                setCart([]);
+                setFormData({
+                    name: '',
+                    phone: '',
+                    email: '',
+                    address: '',
+                    deliveryDate: '',
+                    deliveryMethod: '',
+                    paymentMethod: 'cash',
+                    comment: ''
+                });
+                setShowModal(true);
+
             } catch (error) {
                 console.log('Ошибка при оформлении заказа:', error);
             }
@@ -117,31 +159,38 @@ export default function CartPage() {
                 {cart.length === 0 ? <p>Корзина пуста</p> : (
                     <div className={styles.products}>
                         {cart.map((item) => (
-                            <div className={styles.product} key={item.id}>
+                            <div className={styles.product} key={item.productId}>
                                 <Image
-                                    src={`/images/catalog/cake/${item.img}`}
+                                    className={styles['item-img']}
+                                    src={`/images/catalog/${item.type}/${item.img}`}
                                     width={150}
                                     height={150}
                                     alt={item.name}
                                 />
-                                <p>{item.name}</p>
+                                <div>
+                                    <p>Торт "{item.name}"</p>
+                                    <p>Начинка: {item.filling}</p>
+                                    <p>Кол-во в коробке:</p>
+                                </div>
                                 <div>
                                     <p>{item.price} руб</p>
-                                    <p>
-                                        <span>-</span>
+                                    <p className={styles.quantityProduct}>
+                                        <span className={styles.changeQuantity} onClick={() => handleChangeQuantity(item.uid, -1)}>–</span>
                                         <span>{item.quantity}</span>
-                                        <span>+</span>
+                                        <span className={styles.changeQuantity} onClick={() => handleChangeQuantity(item.uid, +1)}>+</span>
                                     </p>
                                     <p>{item.price * item.quantity} руб</p>
+
                                     <Image
-                                        src={'/icons/trash.svg'}
+                                        className={styles.trash}
+                                        src={'/icons/trash1.svg'}
                                         alt='trash'
                                         width={30}
                                         height={30}
-                                        onClick={() => handleRemoveItem(item.id)}
+                                        onClick={() => handleRemoveItem(item.productId)}
                                     />
                                 </div>
-                                <hr />
+                                {/* <hr /> */}
                             </div>
                         ))}
                         <h2>Итого: {totalPrice} руб</h2>
@@ -209,16 +258,16 @@ export default function CartPage() {
                                 value={formData.deliveryDate || ''}
                                 onChange={handleInputChange}
                             />
-                            {/* <input
+                            <input
                                 type="text"
                                 name="comment"
                                 placeholder="Комментарий"
                                 value={formData.comment}
                                 onChange={handleInputChange}
-                            /> */}
+                            />
                         </div>
                         <hr />
-                        {/* <div>
+                        <div>
                             <p>Способы оплаты</p>
                             <label>
                                 <input
@@ -240,7 +289,7 @@ export default function CartPage() {
                                 />
                                 Карта
                             </label>
-                        </div> */}
+                        </div>
 
                         <hr />
                         <div>
@@ -251,7 +300,13 @@ export default function CartPage() {
                     </form>
                 </div>
             </section>
-
+            {showModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <p>🎉 Заказ успешно оформлен!</p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -7,7 +7,9 @@ import NavLinks from "./navLinks";
 import Image from 'next/image';
 import AuthForm from './auth-form/AuthForm';
 import { useRouter } from 'next/navigation';
+import { mainLinks, mobileLinks } from '../lib/nav-links';
 import axios from 'axios';
+import localforage from 'localforage';
 export default function Header() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
@@ -15,46 +17,6 @@ export default function Header() {
   // const isCatalog = pathname.includes("/catalog") || pathname.includes("/product") || pathname.includes("/profile");
   const beige1Class = isHomePage ? "home-beige" : isAboutPage ? "about-beige" : "catalog-beige";
   const pink1Class = isHomePage ? "home-pink" : isAboutPage ? "about-pink" : "catalog-pink";
-  const links = [
-    {
-      name: 'Каталог',
-      href: '/#'
-    },
-    {
-      name: 'Контакты',
-      href: '/about#delivery'
-    },
-    {
-      name: 'Конструктор торта',
-      href: '/builder'
-    },
-    {
-      name: 'О нас',
-      href: '/about'
-    }
-  ]
-  const links2 = [
-    {
-      name: 'Конструктор торта',
-      href: '/builder'
-    },
-    {
-      name: 'Доставка',
-      href: '/delivery'
-    },
-    {
-      name: 'О нас',
-      href: '/about'
-    },
-    {
-      name: 'Торты',
-      href: '/cake'
-    },
-    {
-      name: 'Десерты',
-      href: '/cake'
-    }
-  ]
   const [showForm, setShowForm] = useState(false);
   const [isReg, setIsReg] = useState(true);
   const [user, setUser] = useState<any>(null);
@@ -67,7 +29,7 @@ export default function Header() {
       const timeout = setTimeout(() => {
         document.getElementById("delivery")?.scrollIntoView({ behavior: "smooth" });
         setScrollToDelivery(false);
-      }, 100); 
+      }, 100);
       return () => clearTimeout(timeout);
     }
     const fetchUserProfile = async () => {
@@ -83,6 +45,22 @@ export default function Header() {
         setUser(null);
       }
     };
+    const fetchCartCount = async () => {
+      try {
+        const cart = await localforage.getItem('cart');
+        if (Array.isArray(cart)) {
+          const count = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+          setItemCount(count);
+        } else {
+          setItemCount(0);
+        }
+      } catch (error) {
+        console.error('Ошибка при получении корзины:', error);
+        setItemCount(0);
+      }
+    };
+
+    fetchCartCount();
     fetchUserProfile();
   }, [pathname, scrollToDelivery]);
 
@@ -92,6 +70,9 @@ export default function Header() {
     } else {
       setShowForm(true);
     }
+  };
+  const handleCartClick = () => {
+    router.push('/cart')
   };
   const handleScroll = () => {
     if (pathname !== "/about") {
@@ -113,18 +94,17 @@ export default function Header() {
             <h3>Sweetlana</h3>
           </Link>
           <nav className="menu">
-            <NavLinks links={links} handleScroll={handleScroll} />
+            <NavLinks links={mainLinks} handleScroll={handleScroll} />
           </nav>
           <div className="header-icons">
-            <div style={{ position: 'relative' }}>
-              <Link key={'cart'} href={'/cart'}>
-                <Image
-                  src="/icons/shooping-cart.svg"
+            {/* <div style={{ position: 'relative' }}> */}
+               <Image
+                  src="/icons/shopping-cart.svg"
                   alt="cart"
                   height={51}
-                  width={51} />
-              </Link>
-              {itemCount > 0 && (
+                  width={51}
+                  onClick={handleCartClick}  />
+              {/* {itemCount > 0 && (
                 <div
                   style={{
                     position: 'absolute',
@@ -140,16 +120,21 @@ export default function Header() {
                 >
                   {itemCount}
                 </div>
-              )}
-            </div>
+              )} */}
+            {/* </div> */}
+            
             <Image
               src="/icons/profile.svg"
               alt="profile"
               height={51}
               width={51}
               onClick={handleProfileClick} />
-            <BurgerMenu links={links2} />
-            {showForm && (
+            <BurgerMenu links={mobileLinks} />
+           
+          </div>
+        </div>
+      </div>
+       {showForm && (
               <AuthForm
                 onSubmit={handleSubmit}
                 isReg={isReg}
@@ -157,9 +142,6 @@ export default function Header() {
                 setShowForm={setShowForm}
               />
             )}
-          </div>
-        </div>
-      </div>
     </header>
   )
 }

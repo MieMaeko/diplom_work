@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation';
 // import CategorTranslate from '@/app/components/СategorTranslate';
 import styles from "./styles/catalog.module.scss"
 import Products from '@/app/components/Products';
+import { typeTranslations, categoryTranslations } from '@/app/lib/translations';
 
 interface Product {
   id: number;
@@ -16,30 +17,7 @@ interface Product {
   price: number;
   img: string;
 }
-const typeTranslations: { [key: string]: string } = {
-  cake: "Торты",
-  dessert: "Десерты"
-};
-const categoryTranslations: { [key: string]: { [key: string]: string } } = {
-  cake: {
-    child: "Детские",
-    biscuit: "Бисквитные",
-    wedding: "Свадебные",
-    gravit: "Антигравитация",
-    ball: "В шаре",
-    muss: "Муссовые",
-    others: "Другие"
-  },
-  dessert: {
-    cupcakes: "Капкейки",
-    pies: "Пирожные",
-    kuliches: "Куличи",
-    sets: "Сеты",
-    desserts: "Десерты",
-    rulets: "Рулеты",
-    breads: "Пряники"
-  }
-};
+
 export default function CatalogPage() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -136,7 +114,7 @@ export default function CatalogPage() {
           onClick={() => {
             setSelectedCategory('');
             setSearchTerm('');
-            setSortOrder('');  
+            setSortOrder('');
           }}
           disabled={!selectedCategory && !searchTerm && !sortOrder}
           aria-label="Сбросить все фильтры"
