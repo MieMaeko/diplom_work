@@ -1,7 +1,8 @@
 'use client'
-import axios from "axios";
+// import axios from "axios";
 import Select, { components, StylesConfig, DropdownIndicatorProps } from 'react-select';
 import { useParams } from 'next/navigation';
+import axios from '../../api/axiosConfig'
 import { useEffect, useState } from "react";
 import Image from 'next/image';
 import localforage from "localforage";
@@ -124,7 +125,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (!productId) return;
     axios
-      .get(`/api/products/product/${productId}`)
+      .get(`/products/product/${productId}`)
       .then((response) => {
         setProduct(response.data);
       })
@@ -137,7 +138,7 @@ export default function ProductPage() {
       if (cached) {
         setFillings(cached);
       } else {
-        const res = await axios.get('/api/fillings');
+        const res = await axios.get('/fillings');
         setFillings(res.data);
         localforage.setItem('fillings', res.data);
       }
@@ -148,7 +149,7 @@ export default function ProductPage() {
       if (cached) {
         setAddons(cached);
       } else {
-        const res = await axios.get('/api/addons');
+        const res = await axios.get('/addons');
         setAddons(res.data);
         localforage.setItem('addons', res.data);
       }
