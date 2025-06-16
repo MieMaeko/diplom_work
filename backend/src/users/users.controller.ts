@@ -57,7 +57,7 @@ export class UserController {
     }
   }
 
- @Post('register')
+  @Post('register')
   async register(
     @Body() body: { name: string; email: string; password: string },
     @Session() session: Record<string, any>
@@ -68,9 +68,10 @@ export class UserController {
     }
 
     try {
+      console.log(`Attempting to register user: ${email}`);
       const user = await this.userService.register(name, email, password);
-
       session.userId = user.id;
+      console.log(`User registered: ${JSON.stringify(user)}`);
 
       return {
         id: user.id,
