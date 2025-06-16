@@ -2,12 +2,16 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    return [
-      {
-        source: '/api/:path*', // Все запросы с /api будут перенаправлены
-        destination: 'http://localhost:3001/:path*', // На сервер Nest, на порт 3001
-      },
-    ];
+    if (process.env.NODE_ENV === 'development') {
+      return [
+        {
+          source: '/api/:path*',
+          destination: 'http://localhost:3001/:path*', // локальный backend
+        },
+      ];
+    }
+
+    return [];
   },
 };
 

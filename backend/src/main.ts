@@ -17,7 +17,7 @@ async function bootstrap() {
   const connection = app.get(Connection);
   await checkDatabaseConnection(connection);
 
-  await app.listen(3001);
+  await app.listen(process.env.PORT || 3001);
 }
 
 bootstrap();

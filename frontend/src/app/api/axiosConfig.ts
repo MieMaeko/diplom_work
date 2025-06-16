@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3001', // Укажите ваш сервер
-  withCredentials: true, // Убедитесь, что куки отправляются с запросом
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+  withCredentials: true,
 });
 
 export default instance;
