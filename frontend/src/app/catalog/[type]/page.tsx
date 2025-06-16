@@ -127,7 +127,7 @@ export default function CatalogPage() {
 
   useEffect(() => {
     if (type) {
-      axios.get(`/api/products/type/${type}`)
+      axios.get(`/products/type/${type}`)
         .then((response) => setProducts(response.data))
         .catch((error) => console.log('Ошибка запроса', error));
     }

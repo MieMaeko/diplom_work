@@ -28,7 +28,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
 
   const onSubmitForm = async (data: FormData) => {
     try {
-      const endpoint = isReg ? '/api/user/register' : '/api/user/login';
+      const endpoint = isReg ? '/user/register' : '/user/login';
       const payload = isReg
         ? { name: data.name, email: data.email, password: data.password }
         : { email: data.email, password: data.password };
@@ -65,7 +65,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
     if (!isReg) return true;
     setCheckingEmail(true);
     try {
-      const res = await axios.post('/api/user/check-email', { email });
+      const res = await axios.post('/user/check-email', { email });
       if (!res.data?.unique) {
         return 'Почта уже занята';
       }

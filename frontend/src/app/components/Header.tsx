@@ -42,7 +42,7 @@ export default function Header() {
     }
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get('/api/user/profile', { withCredentials: true });
+        const response = await axios.get('/user/profile', { withCredentials: true });
         if (response.data?.id) {
           setUser(response.data);
         } else {

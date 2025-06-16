@@ -21,7 +21,7 @@ const Categories: React.FC<CategoriesProps> = ({ type }) => {
 
   useEffect(() => {
     axios
-      .get(`/api/products/type/${type}`)
+      .get(`/products/type/${type}`)
       .then((response) => {
         setCategories(response.data);
       })

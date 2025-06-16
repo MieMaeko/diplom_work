@@ -46,14 +46,14 @@ const ProductModal: React.FC<ProductModalProps> = ({ showForm, setShowForm, setP
                 formData.append('image', data.image[0]);
             }
 
-            await axios.post('/api/products', formData, {
+            await axios.post('/products', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
 
             setShowForm(false);
             reset();
 
-            const updated = await axios.get('/api/products');
+            const updated = await axios.get('/products');
             setProducts(updated.data);
         } catch (error) {
             console.error('Ошибка при добавлении товара:', error);

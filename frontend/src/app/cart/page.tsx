@@ -69,7 +69,7 @@ export default function CartPage() {
 
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get('/api/user/profile', { withCredentials: true })
+                const response = await axios.get('/user/profile', { withCredentials: true })
                 if (response.data) {
                     setUserData(response.data);
                     console.log('User profile data:', response.data);
@@ -141,7 +141,7 @@ export default function CartPage() {
 
             console.log(orderData)
             try {
-                await axios.post('/api/orders', orderData);
+                await axios.post('/orders', orderData);
                 await localforage.removeItem('cart');
                 setCart([]);
                 setFormData({
@@ -324,7 +324,7 @@ export default function CartPage() {
             {showModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
-                        <p>🎉 Заказ успешно оформлен!</p>
+                        <p>Заказ успешно оформлен!</p>
                     </div>
                 </div>
             )}
