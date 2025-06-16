@@ -13,6 +13,10 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
   app.use(session(sessionOptions));
+  app.use((req, res, next) => {
+  console.log('Session ID:', req.sessionID); // Вывод ID сессии
+  next();
+});
   app.useGlobalPipes(validationPipe);
   const connection = app.get(Connection);
   await checkDatabaseConnection(connection);
