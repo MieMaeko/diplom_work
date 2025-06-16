@@ -39,7 +39,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get('/api/user/profile', { withCredentials: true });
+        const response = await axios.get('/user/profile', { withCredentials: true });
         if (response.data?.id) {
           const { orders, ...userData } = response.data;
 
@@ -47,7 +47,7 @@ export default function ProfilePage() {
             orders.map(async (order: Order) => {
               const enrichedItems = await Promise.all(order.items.map(async (item) => {
                 try {
-                  const productRes = await axios.get(`/api/products/product/${item.productId}`);
+                  const productRes = await axios.get(`/products/product/${item.productId}`);
                   const product = productRes.data;
                   return {
                     ...item,
@@ -84,7 +84,7 @@ export default function ProfilePage() {
 
   const handleLogout = async () => {
     try {
-      await axios.post('/api/user/logout', {}, { withCredentials: true });
+      await axios.post('/user/logout', {}, { withCredentials: true });
       window.location.href = '/';
     } catch (error) {
       console.error('Ошибка при выходе', error);
@@ -92,7 +92,7 @@ export default function ProfilePage() {
   };
   const saveField = async (fieldName: keyof User, newValue: string) => {
     try {
-      await axios.put('/api/user/profile', { [fieldName]: newValue }, { withCredentials: true });
+      await axios.put('/user/profile', { [fieldName]: newValue }, { withCredentials: true });
       setUser(prev => prev ? { ...prev, [fieldName]: newValue } : prev);
     } catch (e) {
       console.error(`Ошибка при сохранении ${fieldName}`, e);

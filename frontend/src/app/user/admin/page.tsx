@@ -171,7 +171,7 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const response = await axios.get('/api/user/profile', { withCredentials: true });
+        const response = await axios.get('/user/profile', { withCredentials: true });
         if (response.data.role !== 'admin') {
           router.push('/user/profile');
         }
@@ -181,7 +181,7 @@ export default function AdminPage() {
     };
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`/api/orders?filter=${filter}`);
+        const response = await axios.get(`/orders?filter=${filter}`);
         setOrders(response.data);
       } catch (err) {
         console.error('Ошибка при получении заказов:', err);
@@ -189,7 +189,7 @@ export default function AdminPage() {
     };
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('/api/user/admin/users');
+        const response = await axios.get('/user/admin/users');
         setUsers(response.data);
       } catch (error) {
         console.error('Ошибка при загрузке пользователей:', error);
@@ -197,7 +197,7 @@ export default function AdminPage() {
     };
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('/api/products');
+        const res = await axios.get('/products');
         setProducts(res.data);
       } catch (error) {
         console.error('Ошибка при получении товаров:', error);
@@ -211,7 +211,7 @@ export default function AdminPage() {
 
   const handleStatusChange = async (orderId: number, status: OrderStatus) => {
     try {
-      await axios.put(`/api/orders/${orderId}/status`, { status });
+      await axios.put(`/orders/${orderId}/status`, { status });
       setOrders(prev =>
         prev.map(o => (o.order_id === orderId ? { ...o, status } : o))
       );
@@ -222,7 +222,7 @@ export default function AdminPage() {
 
   const handleInStockChange = async (productId: number, inStock: boolean) => {
     try {
-      await axios.patch(`/api/products/${productId}`, { in_stock: inStock });
+      await axios.patch(`/products/${productId}`, { in_stock: inStock });
       setProducts(prev =>
         prev.map(prod =>
           prod.id === productId ? { ...prod, in_stock: inStock } : prod
