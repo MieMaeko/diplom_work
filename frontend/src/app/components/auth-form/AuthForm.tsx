@@ -1,7 +1,8 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../api/axiosConfig'
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styles from './auth-form.module.scss';
@@ -56,7 +57,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
 
       setShowForm(false);
     } catch {
-      setError('email',  { message: 'Ошибка сервера' });
+      setError('email', { message: 'Ошибка сервера' });
     }
   };
 

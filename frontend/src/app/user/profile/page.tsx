@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../api/axiosConfig'
 import styles from './styles/profile.module.scss'
 import Image from 'next/image';
 // import { useForm } from 'react-hook-form';

@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import localforage from 'localforage';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../api/axiosConfig';
 import Image from 'next/image';
 import styles from './styles/cart.module.scss'
 

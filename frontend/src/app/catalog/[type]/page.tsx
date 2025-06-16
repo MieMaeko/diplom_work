@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../api/axiosConfig'
 import { useSearchParams } from 'next/navigation';
 import styles from "./styles/catalog.module.scss"
 import Products from '@/app/components/Products';

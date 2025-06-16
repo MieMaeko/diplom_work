@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Categor from './Categor';
 import styles from "@/styles/page.module.scss";
-import axios from 'axios';
-
+// import axios from 'axios';
+import axios from '../api/axiosConfig'
 interface CategoriesProps {
   type: string;
 }

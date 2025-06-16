@@ -5,7 +5,8 @@ import Select, { StylesConfig, components, DropdownIndicatorProps } from 'react-
 import Image from 'next/image';
 import styles from './styles/admin.module.scss';
 import arrowSvg from '../../../../public/icons/arrow.svg';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../api/axiosConfig'
 import { OrderStatus, statusOptions, StatusOption } from '../../../../types/order-status';
 import { typeTranslations, categorTranslations } from '@/app/lib/translations';
 import ProductModal from '@/app/components/addProductForm';

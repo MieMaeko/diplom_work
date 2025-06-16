@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../api/axiosConfig'
 import styles from '../user/admin/styles/admin.module.scss';
 import React from 'react';
 

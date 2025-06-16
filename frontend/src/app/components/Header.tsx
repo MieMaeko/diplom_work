@@ -8,7 +8,8 @@ import Image from 'next/image';
 import AuthForm from './auth-form/AuthForm';
 import { useRouter } from 'next/navigation';
 import { mainLinks, mobileLinks } from '../lib/nav-links';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../api/axiosConfig'
 // import localforage from 'localforage';
 
 interface User {
@@ -86,7 +87,7 @@ export default function Header() {
             <h3>Sweetlana</h3>
           </Link>
           <nav className="menu">
-            <NavLinks links={mainLinks}  isBurgerMenu={false} handleScroll={handleScroll} />
+            <NavLinks links={mainLinks} isBurgerMenu={false} handleScroll={handleScroll} />
           </nav>
           <div className="header-icons">
             {/* <div style={{ position: 'relative' }}> */}
