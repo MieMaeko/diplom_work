@@ -8,11 +8,11 @@ import { Addon } from 'src/addons/addon.entity';
 
 export default (): TypeOrmModuleOptions => ({
   type: 'mysql',
-  host: '127.0.0.1',
-  port: 3306,
-  username: 'root',
-  password: '1234',
-  database: 'sweetlana',
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   entities: [Product, User, Filling, Order, OrderItem, Addon],
   synchronize: false,
   logging: false,

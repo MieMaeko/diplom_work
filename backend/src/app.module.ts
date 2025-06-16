@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config'; // 🔹 добавлено
 import { ProductsModule } from './products/products.module';
 import { UserModule } from './users/users.module';
 import { FillingModule } from './fillings/filling.module';
@@ -9,6 +10,7 @@ import { AddonsModule } from './addons/addon.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }), 
     DatabaseModule,
     ProductsModule,
     UserModule,
@@ -16,8 +18,12 @@ import { AddonsModule } from './addons/addon.module';
     OrdersModule,
     AddonsModule,
     SessionModule.forRoot({
-      session: { secret: 'your-secret-key', resave: false, saveUninitialized: false },
+      session: {
+        secret: 'your-secret-key',
+        resave: false,
+        saveUninitialized: false,
+      },
     }),
   ],
 })
-export class AppModule { }
+export class AppModule {}
