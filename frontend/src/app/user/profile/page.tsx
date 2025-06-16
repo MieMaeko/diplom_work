@@ -56,9 +56,9 @@ export default function ProfilePage() {
                     type: product.type
                   };
                 } catch (err) {
-                  if (axios.isAxiosError(err)) {
-                    console.error(`Ошибка загрузки товара ID ${item.productId}:`, err.response?.status);
-                  }
+                  // if (err) {
+                  //   console.error(`Ошибка загрузки товара ID ${item.productId}:`, err.status);
+                  // }
                   return item;
                 }
               }));
