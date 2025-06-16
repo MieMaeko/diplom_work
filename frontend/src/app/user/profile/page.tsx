@@ -55,7 +55,7 @@ export default function ProfilePage() {
                     img: product.img,
                     type: product.type
                   };
-                } catch (err) {
+                } catch {
                   // if (err) {
                   //   console.error(`Ошибка загрузки товара ID ${item.productId}:`, err.status);
                   // }
