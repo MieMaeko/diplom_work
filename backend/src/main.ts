@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import './polyfill';
 import { AppModule } from './app.module';
 import { Connection } from 'typeorm'
 import * as session from 'express-session';
