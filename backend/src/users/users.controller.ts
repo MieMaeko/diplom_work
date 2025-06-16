@@ -31,6 +31,7 @@ export class UserController {
 
   @Put('profile')
   async updateProfile(@Body() body: Record<string, any>, @Session() session: Record<string, any>) {
+
     if (!session.userId) throw new UnauthorizedException();
 
     const allowedFields: (keyof User)[] = ['name', 'phone', 'address'];
