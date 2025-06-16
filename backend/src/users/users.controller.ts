@@ -56,19 +56,34 @@ export class UserController {
     }
   }
 
-   @Post('register')
-  async register(@Body() body: { name: string; email: string; password: string }) {
+ @Post('register')
+  async register(
+    @Body() body: { name: string; email: string; password: string },
+    @Session() session: Record<string, any>
+  ) {
     const { name, email, password } = body;
     if (!name || !email || !password) {
       throw new BadRequestException('Необходимо указать имя, почту и пароль');
     }
 
     try {
-      return await this.userService.register(name, email, password);
+      const user = await this.userService.register(name, email, password);
+
+      session.userId = user.id;
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        role: user.role,
+      };
     } catch (e) {
       throw new BadRequestException(e.message);
     }
   }
+
 
   @Post('check-email')
   async checkEmail(@Body() body: { email: string }) {
@@ -79,15 +94,22 @@ export class UserController {
   @Post('login')
   async login(@Body() body: { email: string, password: string }, @Session() session: Record<string, any>) {
     const { email, password } = body;
-    const user = await this.userService.validateUser(email, password);
-    if (user) {
-      session.userId = user.id;
-      return {
-        message: 'Login successful',
-        role: user.role,
-      };
+    const user = await this.userService.getUserByEmail(email);
+
+    if (!user) {
+      return { error: 'User not found' };
     }
-    return { message: 'Invalid credentials' };
+
+    const isValid = await this.userService.comparePassword(user, password);
+    if (!isValid) {
+      return { error: 'Invalid password' };
+    }
+
+    session.userId = user.id;
+    return {
+      message: 'Login successful',
+      role: user.role,
+    };
   }
   @Post('logout')
   async logout(@Session() session: Record<string, any>) {

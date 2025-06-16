@@ -9,7 +9,14 @@ import AuthForm from './auth-form/AuthForm';
 import { useRouter } from 'next/navigation';
 import { mainLinks, mobileLinks } from '../lib/nav-links';
 import axios from 'axios';
-import localforage from 'localforage';
+// import localforage from 'localforage';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
 export default function Header() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
@@ -19,8 +26,8 @@ export default function Header() {
   const pink1Class = isHomePage ? "home-pink" : isAboutPage ? "about-pink" : "catalog-pink";
   const [showForm, setShowForm] = useState(false);
   const [isReg, setIsReg] = useState(true);
-  const [user, setUser] = useState<any>(null);
-  const [itemCount, setItemCount] = useState(0);
+  const [user, setUser] = useState<User | null>(null);
+  // const [itemCount, setItemCount] = useState(0);
   const [scrollToDelivery, setScrollToDelivery] = useState(false);
   const router = useRouter();
 
@@ -45,22 +52,7 @@ export default function Header() {
         setUser(null);
       }
     };
-    const fetchCartCount = async () => {
-      try {
-        const cart = await localforage.getItem('cart');
-        if (Array.isArray(cart)) {
-          const count = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-          setItemCount(count);
-        } else {
-          setItemCount(0);
-        }
-      } catch (error) {
-        console.error('Ошибка при получении корзины:', error);
-        setItemCount(0);
-      }
-    };
 
-    fetchCartCount();
     fetchUserProfile();
   }, [pathname, scrollToDelivery]);
 
@@ -94,17 +86,17 @@ export default function Header() {
             <h3>Sweetlana</h3>
           </Link>
           <nav className="menu">
-            <NavLinks links={mainLinks} handleScroll={handleScroll} />
+            <NavLinks links={mainLinks}  isBurgerMenu={false} handleScroll={handleScroll} />
           </nav>
           <div className="header-icons">
             {/* <div style={{ position: 'relative' }}> */}
-               <Image
-                  src="/icons/shopping-cart.svg"
-                  alt="cart"
-                  height={51}
-                  width={51}
-                  onClick={handleCartClick}  />
-              {/* {itemCount > 0 && (
+            <Image
+              src="/icons/shopping-cart.svg"
+              alt="cart"
+              height={51}
+              width={51}
+              onClick={handleCartClick} />
+            {/* {itemCount > 0 && (
                 <div
                   style={{
                     position: 'absolute',
@@ -122,7 +114,7 @@ export default function Header() {
                 </div>
               )} */}
             {/* </div> */}
-            
+
             <Image
               src="/icons/profile.svg"
               alt="profile"
@@ -130,18 +122,18 @@ export default function Header() {
               width={51}
               onClick={handleProfileClick} />
             <BurgerMenu links={mobileLinks} />
-           
+
           </div>
         </div>
       </div>
-       {showForm && (
-              <AuthForm
-                onSubmit={handleSubmit}
-                isReg={isReg}
-                setIsReg={setIsReg}
-                setShowForm={setShowForm}
-              />
-            )}
+      {showForm && (
+        <AuthForm
+          onSubmit={handleSubmit}
+          isReg={isReg}
+          setIsReg={setIsReg}
+          setShowForm={setShowForm}
+        />
+      )}
     </header>
   )
 }

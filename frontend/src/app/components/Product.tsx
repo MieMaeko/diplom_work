@@ -1,3 +1,4 @@
+import Image from "next/image";
 import styles from "../catalog/[type]/styles/catalog.module.scss";
 import Link from "next/link";
 interface ProductProps {
@@ -11,7 +12,13 @@ interface ProductProps {
 const Product = ({ id, name, img, price, type }: ProductProps) => {
   return (
     <div key={id} className={styles.product}>
-      <img src={`/images/catalog/${type}/${img}`} alt={name} />
+      <Image
+        src={`/images/catalog/${type}/${img}`}
+        alt={name}
+        width={300}
+        height={300}
+        priority
+      />
       <div className={styles['name-price']}>
         <p>{name}</p>
         <p>от {price}р/кг</p>

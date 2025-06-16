@@ -12,30 +12,30 @@ export class UserService {
   ) { }
 
   async register(name: string, email: string, password: string): Promise<User> {
-  const exists = await this.userRepository.findOneBy({ email });
-  if (exists) {
-    throw new Error('Пользователь с таким email уже зарегистрирован');
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = this.userRepository.create({ name, email, password: hashedPassword });
-  return this.userRepository.save(user);
-}
-
-  async validateUser(email: string, password: string): Promise<User | null> {
-    const user = await this.userRepository.findOneBy({ email });
-    if (user && await bcrypt.compare(password, user.password)) {
-      return user;
+    const exists = await this.userRepository.findOneBy({ email });
+    if (exists) {
+      throw new Error('Пользователь с таким email уже зарегистрирован');
     }
-    return null;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = this.userRepository.create({ name, email, password: hashedPassword });
+    return this.userRepository.save(user);
   }
+
+  // async validateUser(email: string, password: string): Promise<User | null> {
+  //   const user = await this.userRepository.findOneBy({ email });
+  //   if (user && await bcrypt.compare(password, user.password)) {
+  //     return user;
+  //   }
+  //   return null;
+  // }
 
   async getUserProfile(userId: number): Promise<User | null> {
-  return this.userRepository.findOne({
-    where: { id: userId },
-    relations: ['orders', 'orders.items'],
-  });
-}
+    return this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['orders', 'orders.items'],
+    });
+  }
 
   async updateUserData(userId: number, fieldName: keyof Partial<User>, newValue: any): Promise<User | null> {
     const allowedFields: (keyof User)[] = ['name', 'phone', 'address'];
@@ -56,6 +56,11 @@ export class UserService {
     });
   }
   async getUserByEmail(email: string): Promise<User | null> {
-  return this.userRepository.findOneBy({ email });
-}
+    return this.userRepository.findOneBy({ email });
+  }
+
+  async comparePassword(user: User, inputPassword: string): Promise<boolean> {
+    return bcrypt.compare(inputPassword, user.password);
+  }
+
 }

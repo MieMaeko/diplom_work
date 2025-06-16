@@ -1,6 +1,10 @@
 @use "base" as *;
 @use "mixins";
 
+// tablet
+// mobile
+// laptop
+// desktop
 .first-block {
   width: 100%;
   height: 50vh;
@@ -8,258 +12,336 @@
   position: absolute;
   align-items: center;
   top: 20%;
-  @include mixins.mobile {
-    height: 10vh;
 
+  @include mixins.tablet {
+    top: 4%;
   }
-  h1, p {
+
+  @include mixins.mobile {
+    top: -4%;
+  }
+
+  h1,
+  p {
     color: $brown-color;
     line-height: 102%
-  };
+  }
+
+  ;
+
   h1 {
     font-size: 128px;
     font-weight: $extra-bold;
     letter-spacing: -5px;
+
     span {
-    margin-right: 4%;
+      margin-right: 4%;
     }
+
     @include mixins.tablet {
-      font-size: 48px; 
+      font-size: 48px;
       letter-spacing: 0;
+
       span {
         display: block;
         margin: 0;
       }
     }
+
     @include mixins.mobile {
       font-size: 36px;
       letter-spacing: 0;
+
       span {
         display: block;
         margin: 0;
       }
     }
-  };
+  }
+
+  ;
+
   p {
     font-size: 36px;
     font-weight: $semi-bold;
+
     @include mixins.tablet {
-      font-size: 24px;  
+      font-size: 24px;
       width: 90%;
       margin-top: 3%;
     }
+
     @include mixins.mobile {
       font-size: 16px;
       width: 90%;
       margin-top: 3%;
     }
-  };
+  }
+
+  ;
+
   div {
     flex: 1;
   }
 }
+
 .first-block-half1 {
   margin-left: 2%;
   margin-top: 2%;
+
   @include mixins.tablet {
-    margin-top: 3%;  
+    margin-top: 3%;
   }
+
   @include mixins.mobile {
-     margin-top: 20%; 
+    margin-top: -3%;
   }
 }
+
 .first-block-half2 {
   width: 100%;
   height: 50vh;
   top: auto;
   position: relative;
+
+  @include mixins.mobile {
+    height: 0;
+  }
+
   img {
-    position: absolute;   
+    position: absolute;
     left: 55%;
     transform: translate(-50%, -50%);
+
     @include mixins.tablet {
       left: 60%;
     }
+
     @include mixins.mobile {
-      left: 59%;
-    } 
+      left: 60%;
+    }
   }
 }
+
 .strawberry-cake {
-  top: 58%;           
+  top: 58%;
   height: auto;
+
   @include mixins.tablet {
     top: 52%;
-    width: 70%;  
-  }
-  @include mixins.mobile {
     width: 70%;
-    top: 63%;
-  } 
+  }
+
+  @include mixins.mobile {
+    width: 68%;
+    top: 76%;
+  }
 }
+
 .vector-cake {
   top: 62%;
-  height: auto; 
+  height: auto;
+
   @include mixins.tablet {
     top: 55%;
-    width: 76%;  
+    width: 76%;
   }
+
   @include mixins.mobile {
-    width: 75%;
-    top: 65%;
-  }  
+    width: 73%;
+    top: 78%;
+  }
 }
 
 .buttons-cake {
   margin-top: 5.5%;
   display: flex;
   gap: 2%;
+
   @include mixins.mobile {
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
+
     button:nth-child(1) {
       margin-bottom: 4%;
     }
   }
+
   button {
     font-size: 20px;
     font-weight: $medium;
     width: 165px;
     height: 56px;
     border-radius: 10px;
-    border:3px solid $brown-color;
+    border: 3px solid $brown-color;
+
     @include mixins.tablet {
       width: 130px;
-      height: 40px;  
+      height: 40px;
       font-size: 14px;
     }
+
     @include mixins.mobile {
-      width: 130px; 
-      height: 40px;  
+      width: 130px;
+      height: 40px;
     }
   }
+
   .button-contacts {
     background-color: $beige-color;
     color: $brown-color;
   }
+
   .button-contacts:hover {
     background-color: $brown-color;
     color: $beige-color;
   }
+
   .button-delivery {
     background-color: $brown-color;
     color: $beige-color;
   }
+
   .button-delivery:hover {
     background-color: $beige-color;
     color: $brown-color;
   }
 }
+
 .news {
   display: flex;
   justify-content: space-between;
   font-weight: $semi-bold;
   margin-top: 3%;
   margin-bottom: 10%;
+
   @include mixins.tablet {
     margin-top: 5%;
   }
+
   @include mixins.mobile {
     display: block;
   }
-  
+
 }
+
 .benefits {
   width: 600px;
+
   @include mixins.tablet {
-    width: 355px; 
+    width: 355px;
   }
+
   @include mixins.mobile {
-    width: 363px;
-    margin: 0 auto; 
+    width: 350px;
+    margin: 0 auto;
   }
+
   .candle {
     position: relative;
     width: 40px;
     left: 50%;
     top: -8%;
+
     @include mixins.tablet {
       top: -5%;
     }
+
     @include mixins.mobile {
       margin-bottom: 3%;
     }
+
     img {
       @include mixins.tablet {
         width: 11px;
-        height: auto; 
+        height: auto;
       }
     }
   }
+
   .firstLayerofCake {
     border-top-right-radius: 30px;
+
     @include mixins.mobile {
       border-top-left-radius: 30px;
     }
   }
+
   .thirdLayerofCake {
     border-bottom-right-radius: 30px;
+
     @include mixins.tablet {
       border-bottom-right-radius: 18px;
     }
+
     @include mixins.mobile {
       border-bottom-left-radius: 18px;
     }
+
     .groundLayerofCake {
       border-bottom-right-radius: 30px;
+
       @include mixins.mobile {
-        border-bottom-left-radius: 30px;
+        border-bottom-left-radius: 19px;
+        border-bottom-right-radius: 19px;
       }
     }
-    
+
   }
-  .firstLayerofCake, .secondLayerofCake, .thirdLayerofCake{
+
+  .firstLayerofCake,
+  .secondLayerofCake,
+  .thirdLayerofCake {
     background-color: $pink-color;
-    color: $beige-color; 
+    color: $beige-color;
     font-size: 24px;
+
     @include mixins.tablet {
-      font-size: 16px;  
+      font-size: 16px;
     }
+
     .layer-content {
       display: flex;
-      gap:2%;
+      gap: 2%;
       padding: 3%;
       margin-left: 4%;
       align-items: center;
       flex-wrap: wrap;
+
       @include mixins.tablet {
         // padding: 0%;
         // gap: 6%;
         // height: 69px;  
         // margin-left: 9%;
       }
+
       @include mixins.mobile {
         padding: 0%;
         gap: 6%;
-        height: 69px;  
+        height: 69px;
         margin-left: 9%;
       }
+
       span {
-        height: auto; 
+        height: auto;
+
         @include mixins.tablet {
           width: 240px;
-         
+
         }
+
         @include mixins.mobile {
           width: 260px;
         }
       }
     }
   }
+
   .groundLayerofCake {
     background-color: $peach-color;
     width: auto;
     height: 2.5vh;
     margin-bottom: 3%;
+
     // @include mixins.tablet {
     //   width: 355px;  
     // }
@@ -268,37 +350,47 @@
     }
   }
 }
+
 .newChocolate {
   display: flex;
   align-items: center;
+
   @include mixins.tablet {
-      margin-top: 5%;
-    }
+    margin-top: 5%;
+  }
+
   @include mixins.mobile {
     padding-top: 10%;
     justify-content: space-between;
   }
+
   div:nth-child(1) {
     @include mixins.tablet {
       position: relative;
-      left: 12%; 
+      left: 12%;
     }
   }
-  p, button {
-    font-size: 20px; 
+
+  p,
+  button {
+    font-size: 20px;
   }
+
   p {
     width: 200px;
     margin-bottom: 34px;
     color: $brown-color;
+
     @include mixins.tablet {
-      font-size: 15px;  
+      font-size: 15px;
     }
+
     @include mixins.mobile {
       width: 160px;
       margin-bottom: 20px;
     }
   }
+
   button {
     color: $beige-color;
     background-color: $darkPeach-color;
@@ -307,11 +399,13 @@
     border: none;
     border-radius: 10px;
     font-weight: $semi-bold;
+
     @include mixins.tablet {
       width: 150px;
       height: 42px;
     }
   }
+
   .newChocolateH {
     font-size: 40px;
     // @include mixins.mobile {
@@ -321,89 +415,123 @@
     // }
   }
 }
+
 .chocolateBar {
   height: auto;
+
   @include mixins.tablet {
     width: 212px;
-  } 
+  }
+
   @include mixins.mobile {
     width: 170px;
   }
 }
-.cakes, .desserts, .builder {
+
+.cakes,
+.desserts,
+.builder {
   margin-top: 1%;
   color: $brown-color;
   font-weight: $semi-bold;
   text-align: center;
+
   h4 {
     font-size: 64px;
+
     @include mixins.tablet {
-      font-size: 40px;  
+      font-size: 40px;
     }
+
     @include mixins.mobile {
-      font-size: 40px;  
+      font-size: 40px;
     }
+
     margin-bottom: 5.5%;
   }
+
   .categories {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+
     p {
       font-size: 24px;
       margin-top: 3.8%;
       color: $brown-color;
+
       @include mixins.tablet {
         margin-top: 2.8%;
       }
+
       @include mixins.tablet {
-        font-size: 20px; 
+        font-size: 20px;
         margin-top: 2.8%;
       }
     }
+
     div {
       @include mixins.tablet {
         margin-bottom: 14%;
       }
+      cursor: pointer;
       margin-bottom: 4%;
+
       img {
         @include mixins.tablet {
           width: 260px;
-          height: auto; 
+          height: auto;
         }
+
         @include mixins.mobile {
           width: 170px;
-          height: auto; 
+          height: auto;
+        }
+
+        transition: transform 0.3s ease-in-out;
+        /* Плавный переход */
+
+        &:hover {
+          transform: scale(1.05);
+          /* Увеличиваем картинку на 10% */
         }
       }
+
     }
   }
 }
+
 .desserts {
   margin-top: 5%;
 }
+
 .builder {
   margin-top: 8%;
-  .builder-blocks{
+
+  .builder-blocks {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+
     .blocks-adv {
       display: flex;
       justify-content: space-between;
       width: 280px;
+
       p {
         width: 210px;
         font-size: 32px;
         font-weight: $bold;
         text-align: left;
       }
+
       p:nth-of-type(2) {
         font-weight: $regular;
         margin-top: 10px;
         font-size: 20px;
       }
     }
+
     .circle {
       width: 50px;
       font-size: 36px;
@@ -413,8 +541,9 @@
       color: $beige-color;
       box-shadow: -8px 0px 0px 0px $peach-color;
     }
-    
+
   }
+
   .button-builder {
     margin-top: 80px;
     background-color: $brown-color;
@@ -425,10 +554,11 @@
     border: none;
     border-radius: 10px;
   }
-  
+
   .button-builder:hover {
     border: 4px solid $brown-color;
     background-color: $beige-color;
+
     a {
       color: $brown-color;
     }

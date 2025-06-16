@@ -8,9 +8,11 @@ interface LinkType {
 interface NavLinksProps {
   links: LinkType[];
   handleScroll?: () => void;
+  isBurgerMenu?: boolean;
+  onLinkClick?: (event: React.MouseEvent) => void;
 }
 
-const NavLinks: React.FC<NavLinksProps> = ({ links, handleScroll }) => {
+const NavLinks: React.FC<NavLinksProps> = ({ links, handleScroll, isBurgerMenu, onLinkClick }) => {
   return (
     <ul>
       {links.map((link) => {
@@ -23,12 +25,18 @@ const NavLinks: React.FC<NavLinksProps> = ({ links, handleScroll }) => {
           >
             <Link
               href={link.href}
-              onClick={
-                isAnchorToDelivery ? (e) => {
-                  e.preventDefault(); 
-                  handleScroll?.();
-                } : undefined
-              }
+              onClick={(
+                isAnchorToDelivery
+                  ? (e) => {
+                    e.preventDefault();
+                    handleScroll?.();
+                  }
+                  : (e) => {
+                    if (isBurgerMenu && onLinkClick) {
+                      onLinkClick(e); 
+                    }
+                  }
+              )}
             >
               {link.name}
             </Link>

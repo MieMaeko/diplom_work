@@ -24,6 +24,11 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ links }) => {
       setIsClosing(false);
     }, 300);
   };
+    const handleLinkClick = (event: React.MouseEvent) => {
+    if (event.target instanceof HTMLElement && event.target.closest(`.${styles['menu-block']}`)) {
+      handleClose(); 
+    }
+  };
 
   return (
     <div className={styles.burger}>
@@ -41,10 +46,10 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ links }) => {
 
       {isOpen && <div className={`${styles.overlay} ${styles.active}`}></div>}
 
-      <div className={`${styles['menu-block']} ${isOpen ? styles.open : ''}`}>
+      <div className={`${styles['menu-block']} ${isOpen ? styles.open : ''} ${isClosing ? styles.closing : ''}`}>
         <span className={styles.close} onClick={handleClose}>X</span>
         <nav className={styles.menu}>
-          <NavLinks links={links} />
+          <NavLinks links={links} onLinkClick={handleLinkClick} isBurgerMenu={true} />
         </nav>
       </div>
     </div>

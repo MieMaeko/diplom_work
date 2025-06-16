@@ -1,45 +1,46 @@
 'use client'
 import styles from "@/styles/page.module.scss";
-import type { Metadata } from "next";
+// import type { Metadata } from "next";
 import Categories from "./components/Categories";
 import Image from 'next/image';
 import Link from "next/link";
+
+
 // export const metadata: Metadata = {
 //   title: "Sweetlana",
 //   description: "Кондитерская",
 // };
 
 export default function HomePage() {
-
   return (
     <div>
-      <section className={styles['first-block']}>
-        <div className={styles['first-block-half1']}>
-          <h1>
-            <span>Торты</span>
-            <span>на заказ</span>
-          </h1>
-          <p>воплощаем ваши сладкие мечты</p>
-          <div className={styles['buttons-cake']}>
-            <button className={styles['button-delivery']}>Доставка</button>
-            <button className={styles['button-contacts']}>Контакты</button>
+        <section className={styles['first-block']}>
+          <div className={styles['first-block-half1']}>
+            <h1>
+              <span>Торты</span>
+              <span>на заказ</span>
+            </h1>
+            <p>воплощаем ваши сладкие мечты</p>
+            <div className={styles['buttons-cake']}>
+              <button className={styles['button-delivery']}>Доставка</button>
+              <button className={styles['button-contacts']}>Контакты</button>
+            </div>
           </div>
-        </div>
-        <div className={styles['first-block-half2']}>
-          <Image
-            className={styles["vector-cake"]}
-            src="/images/vectors/cakeMain.svg"
-            alt="vector-cake"
-            height={612}
-            width={600} />
-          <Image
-            className={styles["strawberry-cake"]}
-            src="/images/page/pageCake.png"
-            alt="strawberry-cake"
-            height={558}
-            width={558} />
-        </div>
-      </section>
+          <div className={styles['first-block-half2']}>
+            <Image
+              className={styles["vector-cake"]}
+              src="/images/vectors/cakeMain.svg"
+              alt="vector-cake"
+              height={612}
+              width={600} />
+            <Image
+              className={styles["strawberry-cake"]}
+              src="/images/page/pageCake.png"
+              alt="strawberry-cake"
+              height={558}
+              width={558} />
+          </div>
+        </section>
       <section className={styles.news}>
         <div className={styles.benefits}>
           <div className={styles.candle}>

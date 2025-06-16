@@ -20,12 +20,31 @@ interface CartItem {
     filling: string;
     addons: string[];
 }
+interface UserData {
+    id: number;
+    name: string;
+    phone: string;
+    email: string;
+    address?: string;
+}
+
+interface FormData {
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    deliveryDate: string;
+    deliveryMethod: string;
+    paymentMethod: string;
+    comment: string;
+}
+
 export default function CartPage() {
-    const [cart, setCart] = useState<CartItem[]>([]);
-    const [showModal, setShowModal] = useState(false);
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [userData, setUserData] = useState<any>(null);
-    const [formData, setFormData] = useState({
+    const [cart, setCart] = useState<CartItem[]>([]);  
+    const [showModal, setShowModal] = useState<boolean>(false);  
+    const [totalPrice, setTotalPrice] = useState<number>(0);  
+    const [userData, setUserData] = useState<UserData | null>(null); 
+    const [formData, setFormData] = useState<FormData>({
         name: '',
         phone: '',
         email: '',
@@ -35,6 +54,7 @@ export default function CartPage() {
         paymentMethod: 'cash',
         comment: ''
     });
+
     const router = useRouter();
 
 
@@ -75,7 +95,7 @@ export default function CartPage() {
         }
         fetchCart();
         fetchUserProfile();
-    }, [showModal]);
+    }, [showModal, router]);
 
     const handleChangeQuantity = async (uid: string, delta: number) => {
         const updated = cart.map(item =>
@@ -168,7 +188,7 @@ export default function CartPage() {
                                     alt={item.name}
                                 />
                                 <div>
-                                    <p>Торт "{item.name}"</p>
+                                    <p>Торт &quot;{item.name}&quot;</p>
                                     <p>Начинка: {item.filling}</p>
                                     <p>Кол-во в коробке:</p>
                                 </div>

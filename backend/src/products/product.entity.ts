@@ -19,11 +19,10 @@ export class Product {
 
   @Column()
   category: string;
-  
+
   @Column({ default: true })
   in_stock: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   amount: number;
-
 }

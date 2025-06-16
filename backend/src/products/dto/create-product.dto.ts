@@ -3,5 +3,6 @@ export class CreateProductDto {
   price: number;
   category: string;
   type: string;
-  in_stock: boolean; 
+  in_stock: boolean;
+  amount?: number;
 }

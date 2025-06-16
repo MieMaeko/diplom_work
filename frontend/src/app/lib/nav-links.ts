@@ -32,10 +32,10 @@ export const mobileLinks = [
   },
   {
     name: 'Торты',
-    href: '/cake'
+    href: '/catalog/cake'
   },
   {
     name: 'Десерты',
-    href: '/cake'
+    href: '/catalog/dessert'
   }
 ];

@@ -3,17 +3,43 @@
 
 .modal {
     .pinkInput {
-        color: #ff69b4; // текст поля
-        border: 1px solid #ffb6c1;
-        padding: 10px;
-        width: 100%;
-        margin-bottom: 10px;
-        background-color: #fff;
+        border: 5px solid $peach-color;
+        color: $pink-color;
+
+        background-color: $beige-color;
+        margin-bottom: 2%;
 
         &::placeholder {
-            color: #ff69b4; // розовый плейсхолдер
-            opacity: 1; // на всякий случай
+            color: $pink-color;
+            opacity: 1;
         }
+
+        @include mixins.tablet {
+            width: 330px;
+            margin-bottom: 4%;
+            padding: 2.5%;
+
+        }
+
+        @include mixins.mobile {
+            width: 255px;
+            margin-bottom: 4%;
+            padding: 3%;
+
+        }
+
+        @include mixins.laptop {
+            width: 380px;
+            height: 25px;
+            padding: 4%;
+        }
+
+        @include mixins.desktop {}
+
+
+
+
+
     }
 
     position: fixed;
@@ -24,61 +50,90 @@
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-    align-items: center; // Центрируем содержимое по горизонтали
-    justify-content: center; // Центрируем по вертикали, если нужно
+    align-items: center;
+    justify-content: center;
     z-index: 4;
-
-    img {
-        margin-top: -0.1%;
-        z-index: 3;
-        width: 800px;
-    }
 
     .modal-content {
         background-color: $beige-color;
         border-radius: 8px 8px 0 0;
-        // border-radius: 8px;
-        width: 55%;
-        // width: 780px;
+        width: 35%;
         border: none;
-        height: 740px;
+        height: auto;
         position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;
         font-weight: $extra-bold;
 
+
+
         @include mixins.tablet {
-            width: 20%;
+            width: 65%;
         }
 
         @include mixins.mobile {
-            width: 20%;
-            height: 300px;
+            width: 90%;
         }
+
+        @include mixins.desktop {}
 
         .close-form {
             position: absolute;
             top: 15px;
-            right: 15px;
+            right: 20px;
             font-size: 40px;
             cursor: pointer;
             color: $pink-color;
+
+            @include mixins.tablet {
+                font-size: 48px;
+                right: 15px;
+                top: 10px;
+            }
+
+            @include mixins.mobile {
+                font-size: 48px;
+                right: 15px;
+                top: 5px;
+            }
+            @include mixins.desktop {
+                font-size: 56px;
+                right: 25px;
+            }
         }
 
         .close-form:hover {
-            color: #333;
+            color: $peach-color;
         }
 
         .modalH {
-            font-size: 96px;
+
             color: $brown-color;
             text-shadow: 3px 12px #FFC7B8;
             margin-bottom: 44px;
             margin-top: 55px;
 
+            @include mixins.tablet {
+                font-size: 55px;
+                margin-top: 60px;
+                margin-bottom: 30px;
+                text-shadow: 3px 9px #FFC7B8;
+            }
+
             @include mixins.mobile {
-                font-size: 30px;
+                font-size: 40px;
+                margin-top: 60px;
+                margin-bottom: 30px;
+                text-shadow: 3px 9px #FFC7B8;
+            }
+
+            @include mixins.laptop {
+                font-size: 56px;
+            }
+
+            @include mixins.desktop {
+                font-size: 72px;
             }
 
         }
@@ -91,48 +146,106 @@
             input,
             button {
                 border-radius: 20px;
-                font-size: 30px;
+                font-size: 25px;
                 font-weight: $extra-bold;
-            }
 
-            input {
-                border: 5px solid $peach-color;
-                color: $pink-color;
-                width: 480px;
+                @include mixins.tablet {
+                    font-size: 22px;
 
+                }
 
-                height: 30px;
-                padding: 4%;
-                background-color: $beige-color;
-                margin-bottom: 2%;
+                @include mixins.mobile {
+                    font-size: 18px;
+
+                }
             }
 
             button {
-                width: 540px;
+
                 background-color: $pink-color;
                 color: $beige-color;
-                height: 100px;
+                padding: 4%;
                 border: none;
-                margin-top: 44px;
+                margin-top: 24px;
+                 @include mixins.tablet {
+                    
+
+                }
+
+                @include mixins.mobile {
+                   padding: 6%;
+                   margin-top: 15px;
+
+                }
+            }
+
+            button:hover {
+                background-color: $beige-color;
+                color: $pink-color;
+                border: 4px solid $pink-color;
             }
 
         }
     }
 
-    .law {
+    .law,
+    .law1 {
         color: $peach-color;
-        font-size: 20px;
-        width: 600px;
-        margin: 4% auto;
+        width: auto;
+        margin: 2% auto;
         text-align: center;
     }
 
+    .law1 {
+        font-size: 15px;
+        text-decoration: underline;
+
+        @include mixins.tablet {
+            font-size: 13px;
+        }
+
+        @include mixins.mobile {
+            font-size: 10px;
+        }
+        
+    }
+
+    .law {
+        font-size: 20px;
+        text-decoration: underline;
+
+        @include mixins.tablet {
+            font-size: 25px;
+        }
+
+        @include mixins.mobile {
+            font-size: 20px;
+        }
+    }
+
+    .law:hover,
+    .law1:hover {
+        color: $darkPeach-color;
+    }
+
     .image-container {
-        width: 55%;
+        width: 35%;
+        margin-top: -0.5%;
+        z-index: -1;
+
+        @include mixins.tablet {
+            width: 65%;
+        }
+
+        @include mixins.mobile {
+            width: 90%;
+        }
 
         img {
             width: 100%;
             height: auto;
+
+
         }
     }
 

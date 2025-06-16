@@ -35,10 +35,20 @@ export class ProductService {
   }
 
   async create(dto: CreateProductDto, imageName: string): Promise<Product> {
-    const product = this.productRepository.create({
-      ...dto,
+    const productData: Partial<Product> = {
+      name: dto.name,
+      price: dto.price,
+      category: dto.category,
+      type: dto.type,
+      in_stock: dto.in_stock,
       img: imageName,
-    });
+    };
+
+    if (dto.amount !== undefined && dto.amount !== null) {
+      productData.amount = dto.amount;
+    }
+
+    const product = this.productRepository.create(productData);
     return this.productRepository.save(product);
   }
 

@@ -119,6 +119,9 @@
     left: 0;
     transform: translateX(0);
   }
+   &.closing {
+    transform: translateX(-100%);
+  }
 }
 
 .menu {

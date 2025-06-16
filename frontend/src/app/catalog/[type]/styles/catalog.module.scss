@@ -1,5 +1,6 @@
 @use "../../../../styles/base" as *;
 @use "../../../../styles/mixins";
+
 .catalog {
     h2 {
         color: $beige-color;
@@ -10,31 +11,212 @@
         left: 3%;
         z-index: 3;
     }
+
     .search-filters {
         margin: 2% 3% 3% 0;
-        width: 50% ;
+        width: 70%;
         float: right;
-        input {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: $brown-color;
+
+        .clear-filter {
+            padding: 1%;
+            background-color: $brown-color;
+            color: $beige-color;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            &:hover:not(:disabled) {
+                background-color: darken($brown-color, 10%);
+            }
+
+            &:disabled {
+                background-color: darken($brown-color, 10%);
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+        }
+
+        .filter {
+            padding: 4%;
+            display: flex;
+            justify-content: space-between;
+            width: 140px;
+
+        }
+
+        .filter-dropdown {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: block;
+            position: absolute;
+            background-color: #fff6e7;
+            border: 2px solid #b36750;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 1%;
+            z-index: 100;
+            font-size: 20px;
+
+            .radio-label {
+                margin-bottom: 2%;
+
+                label {
+                    display: flex;
+                    gap: 8%;
+                }
+
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+                position: relative;
+
+                .radio {
+                    appearance: none;
+                    position: absolute;
+                    opacity: 0;
+                    pointer-events: none;
+                }
+
+                .radio-custom {
+                    width: 20px;
+                    height: 20px;
+                    border: 2px solid #B36750;
+                    border-radius: 50%;
+                    display: inline-block;
+                    position: relative;
+                }
+
+                .radio:checked+.radio-custom::after {
+                    content: "";
+                    position: absolute;
+                    top: 25%;
+                    left: 25%;
+                    width: 10px;
+                    height: 10px;
+                    background-color: #B36750;
+                    border-radius: 50%;
+                }
+
+            }
+        }
+
+        .open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        input,
+        button {
             margin-left: 1%;
             border: 3px solid $brown-color;
             border-radius: 10px;
-            padding: 2%;
+            color: $brown-color;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
             background-color: $beige-color;
         }
+
+        input {
+            padding: 3%;
+        }
+
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            width: 300px;
+
+            .search-input {
+                padding: 4% 8%;
+                width: 250px;
+                font-size: 20px;
+                transition: all 0.3s ease;
+                background-color: $beige-color;
+                border: 2px solid $brown-color;
+                color: $brown-color;
+                border-radius: 10px;
+
+                input {
+                    font-size: 30px;
+                }
+
+                &:focus {
+                    border-color: $pink-color;
+                    box-shadow: 0 0 10px $pink-color;
+                    outline: none;
+                    background-color: $beige-color; // Явно сохраняем фон
+                    color: $brown-color;
+                }
+
+                &::placeholder {
+                    color: $brown-color;
+                    font-size: 20px;
+                }
+            }
+
+            .search-button {
+                position: absolute;
+                right: 10%;
+                // top: 50%;
+                // transform: translateY(-50%);
+                // background-color: #4CAF50;
+                border: none;
+                // padding: 8px;
+                // border-radius: 50%;
+                cursor: pointer;
+                // display: flex;
+                // align-items: center;
+                // justify-content: center;
+                // transition: background-color 0.3s ease;
+
+                &:hover {
+                    // background-color: #45a049;
+                }
+
+                &:focus {
+                    outline: none;
+                }
+
+                .search-icon {
+                    font-size: 20px;
+                    // color: white;
+                }
+            }
+        }
+
+
     }
+
+
+
     .products {
         display: flex;
         justify-content: space-around;
         flex-wrap: wrap;
         width: 100%;
     }
+
     .product {
         width: 405px;
-        text-align: center; 
+        text-align: center;
         margin-bottom: 4%;
+
         img {
             height: 370px;
+            width: auto;
         }
+
         .name-price {
             color: $brown-color;
             font-weight: $semi-bold;
@@ -42,14 +224,16 @@
             justify-content: space-between;
             padding: 2%;
             align-items: center;
+
             p:first-of-type {
                 font-size: 36px;
             }
-    
+
             p:nth-of-type(2) {
                 font-size: 24px;
             }
         }
+
         .button-order {
             width: 280px;
             height: 60px;
@@ -59,6 +243,13 @@
             color: $beige-color;
             border: none;
             border-radius: 10px;
+            transition: background-color 0.4s ease, color 0.4s ease, border 0.4s ease;
+        }
+
+        .button-order:hover {
+            background-color: $beige-color;
+            color: $brown-color;
+            border: 3px solid $brown-color;
         }
     }
 }

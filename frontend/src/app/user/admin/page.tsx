@@ -1,12 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Select, { components } from 'react-select';
+import Select, { StylesConfig, components, DropdownIndicatorProps } from 'react-select';
 import Image from 'next/image';
 import styles from './styles/admin.module.scss';
 import arrowSvg from '../../../../public/icons/arrow.svg';
 import axios from 'axios';
+import { OrderStatus, statusOptions, StatusOption } from '../../../../types/order-status';
 import { typeTranslations, categorTranslations } from '@/app/lib/translations';
+import ProductModal from '@/app/components/addProductForm';
 
 interface Item {
   id: number;
@@ -30,9 +32,21 @@ interface Order {
   user_email: string;
   address: string;
   delivery_date: string;
-  status: string;
+  status: OrderStatus;
   items: Item[];
 }
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  type: string;
+  in_stock: boolean;
+  img: string;
+  amount?: number;
+}
+
+
 interface User {
   id: number;
   name: string;
@@ -42,28 +56,21 @@ interface User {
   role: string;
   orders: Order[];
 }
-export enum OrderStatus {
-  ОФОРМЛЕН = 'оформлен',
-  ГОТОВИТСЯ = 'готовится',
-  В_ДОСТАВКЕ = 'в доставке',
-  ДОСТАВЛЕН = 'доставлен',
-}
 
-const statusOptions = [
-  { value: 'оформлен', label: 'оформлен', color: '#D9D9D9' },
-  { value: 'готовится', label: 'готовится', color: '#2C3BA9' },
-  { value: 'готов к доставке', label: 'готов к доставке', color: '#EE3686' },
-  { value: 'доставлен', label: 'доставлен', color: '#5EC4BA' },
-];
+
 
 const inStockOptions = [
   { value: true, label: 'в наличии', color: '#88DEA5' },
   { value: false, label: 'нет в наличии', color: '#EB6363' },
 ];
 
-const orderId = 'order';
 
-const DropdownIndicator = (props: any) => {
+const orderId = 'order';
+const DropdownIndicator = <
+  Option extends { value: unknown; label: string; color: string }
+>(
+  props: DropdownIndicatorProps<Option, false>
+) => {
   const { menuIsOpen } = props.selectProps;
   return (
     <components.DropdownIndicator {...props}>
@@ -81,53 +88,55 @@ const DropdownIndicator = (props: any) => {
   );
 };
 
-const customStyles = {
-  control: (base: any) => ({
-    ...base,
-    border: '2px solid #B36750',
-    borderRadius: '8px',
-    backgroundColor: '#FFF6E7',
-    fontSize: '24px',
-    width: '240px',
-    boxShadow: 'none',
-    '&:hover': {
+function createSelectStyles<Option extends { value: unknown; label: string; color: string }>(): StylesConfig<Option, false> {
+  return {
+    control: (base) => ({
+      ...base,
       border: '2px solid #B36750',
-    },
-  }),
-  menu: (base: any) => ({
-    ...base,
-    backgroundColor: '#FFF6E7',
-    width: '240px',
-    zIndex: 9999,
-  }),
-  option: (base: any, state: any) => ({
-    ...base,
-    fontSize: '24px',
-    backgroundColor: state.isFocused ? '#f1e4d3' : '#FFF6E7',
-    color: '#B36750',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    cursor: 'pointer',
-  }),
-  singleValue: (base: any) => ({
-    fontSize: '24px',
-    ...base,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    color: '#B36750',
-  }),
-  dropdownIndicator: (base: any) => ({
-    ...base,
-    color: '#B36750',
-    padding: '0 8px',
-  }),
-  indicatorSeparator: () => ({ display: 'none' }),
-};
+      borderRadius: '8px',
+      backgroundColor: '#FFF6E7',
+      fontSize: '24px',
+      width: '240px',
+      boxShadow: 'none',
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: '#FFF6E7',
+      width: '240px',
+      zIndex: 9999,
+    }),
+    option: (base, state) => ({
+      ...base,
+      fontSize: '24px',
+      backgroundColor: state.isFocused ? '#f1e4d3' : '#FFF6E7',
+      color: '#B36750',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      cursor: 'pointer',
+    }),
+    singleValue: (base) => ({
+      ...base,
+      fontSize: '24px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      color: '#B36750',
+    }),
+    dropdownIndicator: (base) => ({
+      ...base,
+      color: '#B36750',
+      padding: '0 8px',
+    }),
+    indicatorSeparator: () => ({ display: 'none' }),
+  };
+}
 
+const statusSelectStyles = createSelectStyles<StatusOption>();
+const inStockSelectStyles = createSelectStyles<InStockOption>();
+type InStockOption = { value: boolean; label: string; color: string };
 
-const formatOptionLabel = ({ label, color }: any) => (
+const formatOptionLabel = ({ label, color }: { label: string, color: string }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
     <span style={{
       width: 20,
@@ -141,22 +150,22 @@ const formatOptionLabel = ({ label, color }: any) => (
 );
 
 export default function AdminPage() {
-
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<'all' | 'planned' | 'done'>('all');
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    price: '',
-    category: '',
-    type: '',
-    in_stock: true,
-    image: null as File | null,
-  });
-
+  // const [newProduct, setNewProduct] = useState<Product & { image: File | null }>({
+  //   id: 0,
+  //   name: '',
+  //   price: 0,
+  //   category: '',
+  //   type: '',
+  //   in_stock: true,
+  //   img: '',
+  //   image: null
+  // });
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -165,7 +174,7 @@ export default function AdminPage() {
         if (response.data.role !== 'admin') {
           router.push('/user/profile');
         }
-      } catch (error) {
+      } catch {
         router.push('/logout');
       }
     };
@@ -177,7 +186,7 @@ export default function AdminPage() {
         console.error('Ошибка при получении заказов:', err);
       }
     };
-    async function fetchUsers() {
+    const fetchUsers = async () => {
       try {
         const response = await axios.get('/api/user/admin/users');
         setUsers(response.data);
@@ -185,25 +194,25 @@ export default function AdminPage() {
         console.error('Ошибка при загрузке пользователей:', error);
       }
     };
-    async function fetchProducts() {
+    const fetchProducts = async () => {
       try {
         const res = await axios.get('/api/products');
         setProducts(res.data);
       } catch (error) {
         console.error('Ошибка при получении товаров:', error);
       }
-    }
+    };
     fetchProducts();
     fetchOrders();
     fetchUsers();
     checkAdmin();
-  }, [router, filter]);
+  }, [filter, router]);
 
-  const handleStatusChange = async (orderId: number, status: string) => {
+  const handleStatusChange = async (orderId: number, status: OrderStatus) => {
     try {
       await axios.put(`/api/orders/${orderId}/status`, { status });
-      setOrders((prev) =>
-        prev.map((o) => (o.order_id === orderId ? { ...o, status } : o))
+      setOrders(prev =>
+        prev.map(o => (o.order_id === orderId ? { ...o, status } : o))
       );
     } catch (err) {
       console.error('Ошибка при обновлении статуса:', err);
@@ -213,8 +222,8 @@ export default function AdminPage() {
   const handleInStockChange = async (productId: number, inStock: boolean) => {
     try {
       await axios.patch(`/api/products/${productId}`, { in_stock: inStock });
-      setProducts((prev) =>
-        prev.map((prod) =>
+      setProducts(prev =>
+        prev.map(prod =>
           prod.id === productId ? { ...prod, in_stock: inStock } : prod
         )
       );
@@ -222,6 +231,7 @@ export default function AdminPage() {
       console.error('Ошибка при обновлении in_stock:', err);
     }
   };
+
 
   return (
     <div className={styles['admin-work']}>
@@ -282,7 +292,7 @@ export default function AdminPage() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order: any) => (
+            {orders.map((order: Order) => (
               <tr key={order.order_id}>
                 <td id={orderId + order.order_id}>{order.order_id}</td>
                 <td>
@@ -295,7 +305,7 @@ export default function AdminPage() {
                 </td>
                 <td>{order.address}</td>
                 <td>
-                  {order.items.map((item: any) => (
+                  {order.items.map((item: Item) => (
                     <div key={item.id} className={styles['order-item']}>
                       <Image
                         src={`/images/catalog/${item.product.type}/${item.product.img}`}
@@ -312,12 +322,17 @@ export default function AdminPage() {
                 </td>
                 <td>{order.delivery_date}</td>
                 <td>
-                  <Select
+                  <Select<{
+                    value: OrderStatus;
+                    label: string;
+                    color: string;
+                  }>
                     isSearchable={false}
+                    isMulti={false}
                     value={statusOptions.find(opt => opt.value === order.status)}
                     options={statusOptions}
-                    styles={customStyles}
-                    components={{ DropdownIndicator }}
+                    styles={statusSelectStyles}
+                    components={{ DropdownIndicator: DropdownIndicator }}
                     formatOptionLabel={formatOptionLabel}
                     onChange={(selected) => {
                       if (selected) {
@@ -389,12 +404,17 @@ export default function AdminPage() {
                 <td>{categorTranslations[p.category]}</td>
                 <td>{typeTranslations[p.type]}</td>
                 <td>
-                  <Select
+                  <Select<{
+                    value: boolean;
+                    label: string;
+                    color: string;
+                  }>
                     isSearchable={false}
+                    isMulti={false}
                     value={inStockOptions.find(opt => opt.value === p.in_stock)}
                     options={inStockOptions}
-                    styles={customStyles}
-                    components={{ DropdownIndicator }}
+                    styles={inStockSelectStyles}
+                    components={{ DropdownIndicator: DropdownIndicator }}
                     formatOptionLabel={formatOptionLabel}
                     onChange={(selected) => {
                       if (selected) {
@@ -415,74 +435,11 @@ export default function AdminPage() {
             ))}
           </tbody>
         </table>
-
-
-
-        {showForm && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-              <span className={styles.closeButton} onClick={() => setShowForm(false)}>×</span>
-
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  try {
-                    const formData = new FormData();
-                    formData.append('name', newProduct.name);
-                    formData.append('price', newProduct.price);
-                    formData.append('category', newProduct.category);
-                    formData.append('type', newProduct.type);
-                    formData.append('in_stock', newProduct.in_stock ? '1' : '0');
-                    if (newProduct.image) formData.append('image', newProduct.image);
-
-                    await axios.post('/api/products', formData, {
-                      headers: { 'Content-Type': 'multipart/form-data' },
-                    });
-
-                    setShowForm(false);
-                    setNewProduct({
-                      name: '',
-                      price: '',
-                      category: '',
-                      type: '',
-                      in_stock: true,
-                      image: null,
-                    });
-                    const updated = await axios.get('/api/products');
-                    setProducts(updated.data);
-                  } catch (error) {
-                    console.error('Ошибка при добавлении товара:', error);
-                  }
-                }}
-                className={styles['product-form']}
-              >
-                <h4>Добавить товар</h4>
-                <input type="text" placeholder="Название" required value={newProduct.name}
-                  onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} />
-                <input type="number" placeholder="Цена" required value={newProduct.price}
-                  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} />
-                <input type="text" placeholder="Категория" value={newProduct.category}
-                  onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })} />
-                <input type="text" placeholder="Тип (папка)" value={newProduct.type}
-                  onChange={(e) => setNewProduct({ ...newProduct, type: e.target.value })} />
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={newProduct.in_stock}
-                    onChange={(e) =>
-                      setNewProduct({ ...newProduct, in_stock: e.target.checked })
-                    }
-                  />
-                  В наличии
-                </label>
-                <input type="file" accept="image/*"
-                  onChange={(e) => setNewProduct({ ...newProduct, image: e.target.files?.[0] || null })} />
-
-                <button type="submit">Сохранить товар</button>
-              </form>
-            </div>
-          </div>
-        )}
+        <ProductModal
+          showForm={showForm}
+          setShowForm={setShowForm}
+          setProducts={setProducts}
+        />
 
       </div>
 

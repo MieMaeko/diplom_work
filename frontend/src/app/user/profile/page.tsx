@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './styles/profile.module.scss'
 import Image from 'next/image';
+// import { useForm } from 'react-hook-form';
 import EditableField from '@/app/components/EditableField';
 
 interface Order {
@@ -32,8 +33,7 @@ interface User {
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [orders, setOrders] = useState<Order[] | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [input, setInput] = useState('');
+
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -55,8 +55,9 @@ export default function ProfilePage() {
                     type: product.type
                   };
                 } catch (err) {
-                  const axiosError = err as any; 
-                  console.error(`Ошибка загрузки товара ID ${item.productId}:`, axiosError.response?.status);
+                  if (axios.isAxiosError(err)) {
+                    console.error(`Ошибка загрузки товара ID ${item.productId}:`, err.response?.status);
+                  }
                   return item;
                 }
               }));
@@ -111,7 +112,7 @@ export default function ProfilePage() {
                 src={user.img}
                 width={180}
                 height={180}
-                alt={user.img} />
+                alt="Аватар пользователя" />
             )
               : (
                 <Image
@@ -179,7 +180,7 @@ export default function ProfilePage() {
               <div>
                 {orders.map(order => (
                   <table key={order.order_id}>
-                    <tbody>
+                    <thead>
                       <tr>
                         <td>Заказ №</td>
                         <td>Товары</td>
@@ -188,6 +189,8 @@ export default function ProfilePage() {
                         <td>Дата доставки</td>
                         <td>Статус</td>
                       </tr>
+                    </thead>
+                    <tbody>
                       <tr>
                         <td>{order.order_id}</td>
                         <td>

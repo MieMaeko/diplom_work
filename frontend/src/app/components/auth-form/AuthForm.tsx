@@ -5,10 +5,10 @@ import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styles from './auth-form.module.scss';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface AuthFormProps {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: FormData) => void;
   isReg: boolean;
   setIsReg: (isReg: boolean) => void;
   setShowForm: (showForm: boolean) => void;
@@ -20,7 +20,6 @@ interface FormData {
   password: string;
   confirmPassword?: string;
 }
-
 const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowForm }) => {
   const { register, handleSubmit, watch, setError, formState: { errors }, trigger } = useForm<FormData>();
   const [checkingEmail, setCheckingEmail] = useState(false);
@@ -35,6 +34,18 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
 
       const response = await axios.post(endpoint, payload, { withCredentials: true });
 
+      if (!isReg && response.data?.error) {
+        console.log(response.data.error)
+        if (response.data.error === 'User not found') {
+          setError('email', { message: 'Пользователь с такой почтой не найден' });
+        } else if (response.data.error === 'Invalid password') {
+          setError('password', { message: 'Неверный пароль' });
+        } else {
+          setError('email', { message: 'Ошибка входа' });
+        }
+        return;
+      }
+
       onSubmit(response.data);
 
       if (response.data.role === 'admin') {
@@ -44,8 +55,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
       }
 
       setShowForm(false);
-    } catch (err: any) {
-      setError('email', { message: 'Неверные данные или пользователь уже существует' });
+    } catch {
+      setError('email',  { message: 'Ошибка сервера' });
     }
   };
 
@@ -54,13 +65,17 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
     setCheckingEmail(true);
     try {
       const res = await axios.post('/api/user/check-email', { email });
-      return res.data?.unique ?? true;
+      if (!res.data?.unique) {
+        return 'Почта уже занята';
+      }
+      return true;
     } catch {
-      return false;
+      return 'Ошибка проверки почты';
     } finally {
       setCheckingEmail(false);
     }
   };
+
 
   return (
     <div className={styles.modal}>
@@ -68,6 +83,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
         <span className={styles["close-form"]} onClick={() => setShowForm(false)}>X</span>
         <p className={styles.modalH}>{isReg ? 'Регистрация' : 'Авторизация'}</p>
         <form onSubmit={handleSubmit(onSubmitForm)}>
+          {errors.name && <p style={{ color: '#EB6363' }}>{errors.name.message}</p>}
 
           {isReg && (
             <input
@@ -77,7 +93,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
               className={styles.pinkInput}
             />
           )}
-          {errors.name && <p style={{ color: 'red' }}>{errors.name.message}</p>}
+          {checkingEmail && <p>Проверка email...</p>}
+          {errors.email && <p style={{ color: '#EB6363' }}>{errors.email.message}</p>}
 
           <input
             type="email"
@@ -93,8 +110,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
             onBlur={() => trigger('email')}
             className={styles.pinkInput}
           />
-          {checkingEmail && <p>Проверка email...</p>}
-          {errors.email && <p style={{ color: 'red' }}>{errors.email.message}</p>}
+          {errors.password && <p style={{ color: '#EB6363' }}>{errors.password.message}</p>}
 
           <input
             type="password"
@@ -108,7 +124,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
             })}
             className={styles.pinkInput}
           />
-          {errors.password && <p style={{ color: 'red' }}>{errors.password.message}</p>}
+
+          {errors.confirmPassword && <p style={{ color: '#EB6363' }}>{errors.confirmPassword.message}</p>}
 
           {isReg && (
             <input
@@ -122,17 +139,17 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, isReg, setIsReg, setShowF
               className={styles.pinkInput}
             />
           )}
-          {errors.confirmPassword && <p style={{ color: 'red' }}>{errors.confirmPassword.message}</p>}
-
+          <p className={styles.law} onClick={() => setIsReg(!isReg)}>
+            {isReg ? 'Уже есть аккаунт?' : 'Нет аккаунта?'}
+          </p>
           <button type="submit">{isReg ? 'Зарегистрироваться' : 'Войти'}</button>
-          <p className={styles.law}>
-            Нажимая отправить, вы соглашаетесь с нашими условиями использования
+          <p className={styles.law1}>
+            {isReg ? 'Нажимая зарегистрироваться, вы соглашаетесь с нашими условиями использования' : ''}
+
           </p>
         </form>
 
-        <p className={styles.law} onClick={() => setIsReg(!isReg)}>
-          {isReg ? 'Уже есть аккаунт?' : 'Нет аккаунта?'}
-        </p>
+
       </div>
       <div className={styles['image-container']}>
         <Image

@@ -1,12 +1,13 @@
 'use client'
 import axios from "axios";
-import Select, { components, SingleValue } from 'react-select';
+import Select, { components, StylesConfig, DropdownIndicatorProps } from 'react-select';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from "react";
 import Image from 'next/image';
 import localforage from "localforage";
 import styles from "./styles/product.module.scss"
 import md5 from 'md5';
+
 interface Product {
   id: number;
   name: string;
@@ -43,22 +44,46 @@ interface CartItem {
   addons: string[];
 }
 
+const customStyles: StylesConfig<OptionType, false> = {
+  option: (provided, state) => ({
+    ...provided,
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: state.isSelected ? '#f0f0f0' : 'white',
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    display: 'flex',
+    alignItems: 'center',
+  }),
+  control: (provided) => ({
+    ...provided,
+    minWidth: 250,
+  }),
+};
 const customArrowStyles = (isOpen: boolean) => ({
   transition: 'transform 0.3s ease',
   transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
 });
 
-const CustomArrow = (props: any) => {
-  const { selectProps } = props;
+const CustomArrow = (props: DropdownIndicatorProps<OptionType, false>) => {
+  const { selectProps, innerProps, isFocused } = props;
   const isOpen = selectProps.menuIsOpen;
 
   return (
     <components.DropdownIndicator {...props}>
-      <span style={{ ...customArrowStyles(isOpen) }}>▼</span>
+      <span
+        style={{
+          ...customArrowStyles(isOpen),
+          color: isFocused ? 'blue' : 'black', 
+        }}
+        {...innerProps} 
+      >
+        ▼
+      </span>
     </components.DropdownIndicator>
   );
 };
-
 export default function ProductPage() {
   const { id } = useParams();
   const productId = Number(id);
@@ -74,29 +99,14 @@ export default function ProductPage() {
     label: filling.name,
     img: filling.img,
   }));
+
   useEffect(() => {
     if (options.length > 0 && !selectedFilling) {
       setSelectedFilling(options[0]);
     }
-  }, [options]);
+  }, [options, selectedFilling]);
 
-  const customStyles = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      display: 'flex',
-      alignItems: 'center',
-      backgroundColor: state.isSelected ? '#f0f0f0' : 'white',
-    }),
-    singleValue: (provided: any) => ({
-      ...provided,
-      display: 'flex',
-      alignItems: 'center',
-    }),
-    control: (provided: any) => ({
-      ...provided,
-      minWidth: 250,
-    }),
-  };
+
   const formatOptionLabel = (option: OptionType) => (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <Image
@@ -190,6 +200,7 @@ export default function ProductPage() {
     <div className={styles.product}>
       <h3>{product.name}</h3>
       <p>Собрать</p>
+      <p>Выбирайте начинку и вес торта. В комментариях уточните, если хотите изменить: цвет крема, параметры декора и тд. Фантазируйте, а мы реализуем!</p>
       <div className={styles["product-info"]}>
         <div>
           <Image
@@ -214,17 +225,6 @@ export default function ProductPage() {
               isSearchable={false}
               onChange={(option) => setSelectedFilling(option)}
             />
-
-            {/* <p>Начинка</p> */}
-
-            {/* <Select
-              options={options}
-              components={{ DropdownIndicator: CustomArrow }}
-              classNamePrefix="custom-select"
-              isSearchable={false}
-              value={selectedFilling}
-              onChange={(option: SingleValue<OptionType>) => setSelectedFilling(option)}
-            /> */}
           </div>
           <div>
             <div>

@@ -48,10 +48,12 @@
   padding: 0;
   margin: 0;
   font-family: 'WixMadeDisplay', sans-serif;
+  
 
 }
 
 body {
+  height: 100%;
   background-color: base.$beige-color;
 
   a {
@@ -73,6 +75,7 @@ body {
 
     @include mixins.mobile {
       font-size: 24px;
+      margin-top: -3%;
     }
   }
 }
@@ -85,6 +88,33 @@ body {
     text-align: center;
     align-items: center;
 
+    li:not(.li-drop) a {
+      position: relative;
+      display: inline-block;
+      text-decoration: none;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        transform-origin: center;
+        width: 100%;
+        height: 2px;
+        background-color: currentColor;
+        transition: transform 0.4s ease;
+      }
+
+      &:hover::after {
+        transform: translateX(-50%) scaleX(1);
+      }
+    }
+
+    .drop-menu a::after {
+      display: none;
+    }
+
     .li-drop {
       position: relative;
       width: 130px;
@@ -94,17 +124,25 @@ body {
       border-left: 3px solid transparent;
       border-right: 3px solid transparent;
       border-radius: 10px 10px 0 0;
-      transition: background-color 0.3s, border-color 0.3s;
+      transition: background-color 0.4s, border-color 0.4s;
+
+      &:hover {
+        border-color: base.$beige-color;
+        cursor: pointer;
+
+        .drop-menu {
+          opacity: 1;
+          transform: translateY(0);
+          visibility: visible;
+          pointer-events: auto;
+        }
+      }
     }
 
-    .li-drop:hover {
-      border-color: base.$beige-color;
-      ;
-      cursor: pointer;
-    }
+
 
     .drop-menu {
-      display: none;
+      display: block;
       position: absolute;
       box-sizing: border-box;
       width: 130px;
@@ -118,6 +156,12 @@ body {
       border-right: 3px solid base.$beige-color;
       z-index: 4;
 
+      opacity: 0;
+      transform: translateY(-10px);
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.4s ease;
+
       .menu-line {
         width: 100px;
         height: 3px;
@@ -127,9 +171,13 @@ body {
       }
     }
 
-    .li-drop:hover>.drop-menu {
-      display: block;
-      transition: display 1s;
+    .li-drop:hover {
+      .drop-menu {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+      }
     }
   }
 
@@ -148,13 +196,11 @@ body {
   width: 130px;
   justify-content: space-between;
   z-index: 1000;
+
   img {
     cursor: pointer;
 
-    @include mixins.desktop {
-      width: 48px;
-      height: auto;
-    }
+
 
     @include mixins.tablet {
       width: 41px;
@@ -162,7 +208,14 @@ body {
     }
 
     @include mixins.mobile {
-      width: 28px;
+      width: 35px;
+      height: auto;
+    }
+
+
+
+    @include mixins.desktop {
+      width: 48px;
       height: auto;
     }
 
@@ -179,48 +232,80 @@ body {
 
   @include mixins.mobile {
     margin: 0 4% 0;
+
+    h3 {
+      margin-top: -5%;
+    }
   }
 
   @include mixins.tablet {
-      margin: 0 2% 0;
+    margin: 0 2% 0;
   }
 
 }
-
-
 
 
 .home-beige {
   background-image: url('/images/vectors/beigeMain.svg');
   background-size: cover;
-  height: 99vh;
-  position: relative;
+  background-repeat: no-repeat;
+  width: 100vw;
+
 
   @include mixins.tablet {
-    height: 89vh;
+    height: 55vh;
     background-image: url('/images/vectors/tablet/beigeMain.svg');
   }
 
   @include mixins.mobile {
     background-image: url('/images/vectors/mobile/beigeMain.svg');
-    height: 51vh;
+    height: 32vh;
   }
+
+
+  @include mixins.laptop {
+    height: 99vh;
+    background-image: url('/images/vectors/laptop/beigeMain.svg');
+  }
+
+  @include mixins.desktop {
+    height: 110vh;
+
+    background-image: url('/images/vectors/desktop/beigeMain.svg');
+  }
+
+
 }
 
 .home-pink {
   background-image: url('/images/vectors/pinkMain.svg');
   background-size: cover;
-  height: 91vh;
+  background-repeat: no-repeat;
+  width: 100vw;
+
 
   @include mixins.tablet {
+    height: 50vh;
     background-image: url('/images/vectors/tablet/pinkMain.svg');
-    height: 84vh;
+
   }
 
   @include mixins.mobile {
     background-image: url('/images/vectors/mobile/pinkMain.svg');
-    height: 50vh;
+    height: 32vh;
   }
+
+  @include mixins.laptop {
+    height: 92vh;
+    background-image: url('/images/vectors/laptop/pinkMain.svg');
+  }
+
+  @include mixins.desktop {
+    height: 100vh;
+    background-image: url('/images/vectors/desktop/pinkMain.svg');
+
+  }
+
 
 }
 
@@ -251,49 +336,75 @@ body {
 }
 
 footer {
-  background-image: url('/images/vectors/beigeFooter.svg');
+
   background-size: cover;
   height: auto;
   @include base.default-menu;
+
+  @include mixins.desktop {
+    background-image: url('/images/vectors/desktop/beigeFooter.svg');
+    width: auto;
+
+    // font-size: 10px;
+  }
+
+  @include mixins.laptop {
+    background-image: url('/images/vectors/beigeFooter.svg');
+  }
+
+
+  @include mixins.tablet {
+    background-image: url('/images/vectors/tablet/beigeFooter.svg');
+  }
 
   @include mixins.mobile {
     background-image: url('/images/vectors/mobile/beigeFooter.svg');
     // font-size: 5px;
   }
 
-  @include mixins.tablet {
-    background-image: url('/images/vectors/mobile/beigeFooter.svg');
-  }
 
-  @include mixins.desktop {
-    width: auto;
-    background-size: auto;
-    font-size: 10px;
-  }
+
+
 
   .footer-back {
-    background-image: url('/images/vectors/pinkFooter.svg');
+
     background-size: cover;
     height: auto;
     position: relative;
     top: 50px;
+
+    @include mixins.desktop {
+      background-image: url('/images/vectors/desktop/pinkFooter.svg');
+    }
+
+    @include mixins.laptop {
+      background-image: url('/images/vectors/pinkFooter.svg');
+    }
+
+    @include mixins.tablet {
+      background-image: url('/images/vectors/tablet/pinkFooter.svg');
+    }
 
     @include mixins.mobile {
       background-image: url('/images/vectors/mobile/pinkFooter.svg');
 
     }
 
-    @include mixins.tablet {
-      width: auto;
-      background-size: auto;
-    }
-
-
     .footer-content {
       padding-top: 8%;
 
       h3 {
         margin-left: 2%;
+
+        @include mixins.tablet {
+          margin-top: 2%;
+          font-size: 40px;
+        }
+
+        @include mixins.mobile {
+          margin-top: 7%;
+          font-size: 30px;
+        }
       }
 
       .footer-menu {
@@ -310,8 +421,22 @@ footer {
           justify-content: space-around;
         }
 
-        a {
-          // font-size: 24px; //ffff
+        a,
+        p {
+
+
+          @include mixins.desktop {}
+
+          @include mixins.laptop {
+            font-size: 24px;
+          }
+
+          @include mixins.tablet {
+            font-size: 16px;
+          }
+
+          @include mixins.mobile {}
+
           font-weight: base.$semi-bold;
         }
 
@@ -320,10 +445,25 @@ footer {
         display: flex;
         justify-content: space-between;
 
+        @include mixins.tablet {
+          margin: 20% auto 5%;
+        }
+
         .footer-categories {
           a {
-            // font-size: 16px;
+
             font-weight: base.$medium;
+
+            @include mixins.desktop {}
+
+            @include mixins.laptop {
+              font-size: 16px;
+            }
+
+            @include mixins.tablet {}
+
+            @include mixins.mobile {}
+
           }
 
         }
@@ -331,10 +471,7 @@ footer {
         p {
           line-height: 30px;
           margin-bottom: 8%;
-          font-size: 5px; //ff
-          // @include mixins.tablet {
-          //   font-size: 3rem;
-          // }
+
 
         }
       }
