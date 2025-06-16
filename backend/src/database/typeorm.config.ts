@@ -16,5 +16,5 @@ export default (): TypeOrmModuleOptions => ({
   entities: [Product, User, Filling, Order, OrderItem, Addon],
   synchronize: false,
   logging: false,
-  migrationsRun: true,
+  migrationsRun: false,
 });
