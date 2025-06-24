@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { OrderItem } from 'src/orders/order-item.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany
+} from 'typeorm';
+
 
 @Entity('addons')
 export class Addon {
@@ -8,6 +15,6 @@ export class Addon {
   @Column()
   name: string;
 
-  @Column()
-  img: string;
+  @ManyToMany(() => OrderItem, orderItem => orderItem.addons)
+  orderItems: OrderItem[];
 }

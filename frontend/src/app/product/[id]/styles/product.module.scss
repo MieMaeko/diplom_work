@@ -1,38 +1,62 @@
 @use "../../../../styles/base" as *;
 @use "../../../../styles/mixins";
+
 .product {
-    input, select, button {
+
+    input,
+    select,
+    button {
         border-radius: 10px;
     }
+
     h3 {
         color: $beige-color;
         font-size: 64px;
         font-weight: $extra-bold;
+        width: 250px;
         position: absolute;
         top: 14%;
         left: 2%;
         z-index: 3;
     }
-    h3 + p {
+
+    h3+p {
         font-size: 48px;
         margin-left: 50%;
     }
-    p, span {
+
+    p,
+    span {
         font-size: 36px;
         color: $brown-color;
         font-weight: $bold;
     }
+
     .product-info {
         display: flex;
         justify-content: space-between;
         width: 90%;
+        gap: 8%;
         margin: 0 auto;
+
+        .view {
+            img {
+
+                width: auto;
+                height: 500px;
+
+            }
+        }
     }
+
     .form-order {
-        select, input {
+
+        select,
+        input {
             width: 100px;
             height: 50px;
         }
+
         .addCart {
             background-color: $brown-color;
             color: $beige-color;
@@ -40,25 +64,26 @@
             width: 320px;
             height: 70px;
             border: none;
-            
+
         }
+
         // .filling-option {
         //     display: flex;
         //     align-items: center;
         //     width: 100%;
-            
+
         //     &__image {
         //       width: 50%;
         //       height: 48px;
         //       overflow: hidden;
-              
+
         //       img {
         //         width: 100%;
         //         height: 100%;
         //         object-fit: cover;
         //       }
         //     }
-          
+
         //     &__label {
         //       width: 50%;
         //       padding-left: 10px;
@@ -68,6 +93,58 @@
         //     }
         //   }
     }
-    
+
+    .warningBlock {
+        width: 80%;
+        margin: 5% auto;
+        text-align: justify;
+        color: $brown-color;
+
+        ul {
+            margin-top: 1%;
+            font-size: 18px;
+
+            li {
+                margin-bottom: 1%;
+                list-style-type: disc;
+            }
+
+        }
+    }
 }
 
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    position: relative;
+
+    input[type='checkbox'] {
+        display: none;
+    }
+
+    .customCheckbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #B36750;
+        border-radius: 4px;
+        display: inline-block;
+        position: relative;
+        background-color: #FFF6E7;
+    }
+
+    input[type='checkbox']:checked+.customCheckbox::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 6px;
+        width: 5px;
+        height: 10px;
+        border: solid #B36750;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+}

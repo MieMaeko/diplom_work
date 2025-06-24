@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "../catalog/[type]/styles/catalog.module.scss";
 import Link from "next/link";
+import { apiUrl } from '../lib/config';
 interface ProductProps {
   id: number;
   name: string;
@@ -10,10 +11,11 @@ interface ProductProps {
 }
 
 const Product = ({ id, name, img, price, type }: ProductProps) => {
+  const imageUrl = `${apiUrl}/images/catalog/${type}/${img}`;
   return (
     <div key={id} className={styles.product}>
       <Image
-        src={`/images/catalog/${type}/${img}`}
+        src={imageUrl}
         alt={name}
         width={300}
         height={300}

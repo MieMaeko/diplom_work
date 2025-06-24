@@ -1,47 +1,40 @@
 import * as session from 'express-session';
-import { Sequelize } from 'sequelize';
-import * as connectSessionSequelize from 'connect-session-sequelize';
+import * as connectRedis from 'connect-redis';
+// import Redis from 'ioredis';
 
-// Установим переменные окружения или значения по умолчанию
-const DB_PORT = process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306;
-const DB_HOST = process.env.DB_HOST || 'localhost';
-const DB_USERNAME = process.env.DB_USERNAME || 'root';
-const DB_PASSWORD = process.env.DB_PASSWORD || '';
-const DB_NAME = process.env.DB_NAME || 'sweetlana';
+// const RedisStore = connectRedis(session);
 
-const sequelize = new Sequelize({
-  dialect: 'mysql',
-  host: DB_HOST,
-  port: DB_PORT,
-  username: DB_USERNAME,
-  password: DB_PASSWORD,
-  database: DB_NAME,
-});
+// Railway Redis клиент
 
-const SequelizeStore = connectSessionSequelize(session.Store);
+// const redisClient = new Redis({
+//   host: 'redis-production-5266.up.railway.app',
+//   port: 6379,
+//   password: 'jBYeYZGOvpeHufyGWTqCjVCXZomWDqNV',
+//   tls: {},
+// });
+// export const sessionOptions: session.SessionOptions = {
+//   store: new RedisStore({ client: redisClient }),
+//   secret: process.env.SESSION_SECRET || 'your-secret-key',
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     maxAge: 1000 * 60 * 60 * 24, // 1 день
+//     httpOnly: true,
+//     sameSite: 'lax',
+//     secure: true, // включаем для HTTPS в Railway
+//   },
+// };
 
-const sessionStore = new SequelizeStore({
-  db: sequelize,
-  checkExpirationInterval: 15 * 60 * 1000,
-  expiration: 24 * 60 * 60 * 1000,
-});
 
-export const sessionOptions = {
+export const sessionOptions: session.SessionOptions = {
+  store: new session.MemoryStore(),
   secret: process.env.SESSION_SECRET || 'your-secret-key',
   resave: false,
   saveUninitialized: false,
-  store: sessionStore,
   cookie: {
-    secure: false,
+    maxAge: 1000 * 60 * 60 * 24, // 1 день
     httpOnly: true,
-    sameSite: 'none' as 'none',
+    sameSite: 'lax',             // или 'none' при кросс-домене
+    secure: false,               // true — в production с HTTPS
   },
 };
-
-sequelize.sync()
-  .then(() => {
-    console.log('Database synced');
-  })
-  .catch((err) => {
-    console.error('Unable to sync the database:', err);
-  });

@@ -16,10 +16,12 @@
 // };
 
 // export default nextConfig;
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
+  images: {
+    domains: ['localhost'], // Разрешаем изображения только с localhost
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

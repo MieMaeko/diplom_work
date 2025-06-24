@@ -5,8 +5,10 @@ import axios from '../../api/axiosConfig'
 import styles from './styles/profile.module.scss'
 import Image from 'next/image';
 // import { useForm } from 'react-hook-form';
+import { apiUrl } from '@/app/lib/config';
 import EditableField from '@/app/components/EditableField';
-
+import { statusColors } from '../../../../types/order-status';
+import { OrderStatus } from '../../../../types/order-status';
 interface Order {
   order_id: number;
   delivery_date: string;
@@ -20,6 +22,7 @@ interface Order {
     price: number;
     name?: string;
     img?: string;
+    amount?: number;
     type?: string;
   }[];
 }
@@ -30,6 +33,7 @@ interface User {
   img: string;
   address: string;
   orders?: Order[];
+  role?: string;
 }
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -124,13 +128,13 @@ export default function ProfilePage() {
                 />
               )}
           </div>
-          <div className={styles['circle-change']}>
+          {/* <div className={styles['circle-change']}>
             <Image
               src="/icons/change.svg"
               width={50}
               height={50}
               alt='change' />
-          </div>
+          </div> */}
         </div>
 
         <h3>{user.name ? (
@@ -140,7 +144,15 @@ export default function ProfilePage() {
             <span>User</span>
           )}</h3>
       </div>
-      <button onClick={handleLogout} className={styles['settings-button']}>Выйти из аккаунта</button>
+      <div className={styles['profile-buttons']}>
+        <button onClick={handleLogout} className={styles['settings-button']}>Выйти из аккаунта</button>
+        {user.role === 'admin' && (
+          <button className={styles['admin-button']} onClick={() => window.location.href = '/user/admin'}>
+            Админ-панель
+          </button>
+        )}
+      </div>
+
       <div className={styles['profile-info']}>
         <div className={styles.settings}>
           <EditableField
@@ -179,44 +191,105 @@ export default function ProfilePage() {
               <p>Нет заказов</p>
             ) : (
               <div>
-                {orders.map(order => (
-                  <table key={order.order_id}>
-                    <thead>
-                      <tr>
-                        <td>Заказ №</td>
-                        <td>Товары</td>
-                        <td>Количество</td>
-                        <td>Сумма заказа</td>
-                        <td>Дата доставки</td>
-                        <td>Статус</td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>{order.order_id}</td>
-                        <td>
-                          {order.items.map((item, index) => (
-                            <div key={index}>
-                              {item.img && item.type && (
-                                <Image
-                                  src={`/images/catalog/${item.type}/${item.img}`}
-                                  width={80}
-                                  height={80}
-                                  alt={item.name || 'Товар'}
-                                />
+                <div className={styles.desktopOnly}>
+                  {orders.map(order => (
+                    <table key={order.order_id}>
+                      <thead>
+                        <tr>
+                          <td>Заказ №</td>
+                          <td>Товары</td>
+                          <td>Сумма заказа</td>
+                          <td>Дата доставки</td>
+                          <td>Статус</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{order.order_id}</td>
+                          <td>
+                            {order.items.map((item, index) => (
+                              <div key={index}>
+                                {item.img && item.type && (
+                                  <Image
+                                    src={`${apiUrl}/images/catalog/${item.type}/${item.img}`}
+                                    width={80}
+                                    height={80}
+                                    alt={item.name || 'Товар'}
+                                  />
+                                )}
+                                <p>{item.name || `Товар ${item.productId}`} — {item.price} руб (x{item.quantity})</p>
+                                {item.type === 'dessert' && item.amount !== undefined && (
+                                  <p>В наборе {item.amount} штук</p>
+                                )}
+
+                                {item.type === 'cake' && item.weight !== undefined && (
+                                  <p>Вес: {item.weight} кг</p>
+                                )}
+                              </div>
+                            ))}
+                          </td>
+                          <td>{order.total_price} руб</td>
+                          <td>{order.delivery_date}</td>
+                          <td>
+                            <span
+                              style={{
+                                display: 'inline-block',
+                                width: '10px',
+                                height: '10px',
+                                borderRadius: '50%',
+                                backgroundColor: statusColors[order.status as OrderStatus],
+                                marginRight: '8px',
+                              }}
+                            ></span>
+                            {order.status}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  ))}
+                </div>
+                <div className={styles.mobileOnly}>
+                  {orders.map(order => (
+                    <div key={order.order_id} className={styles.orderCard}>
+                      <p><strong>Заказ №:</strong> {order.order_id}</p>
+                      <p><strong>Дата:</strong> {order.delivery_date}</p>
+                      <p><strong>Сумма:</strong> {order.total_price} руб</p>
+                      <p><strong>Статус:</strong> <span style={{
+                        display: 'inline-block',
+                        width: '10px',
+                        height: '10px',
+                        borderRadius: '50%',
+                        backgroundColor: statusColors[order.status as OrderStatus],
+                        marginRight: '8px',
+                      }}></span>{order.status}</p>
+
+                      <div className={styles.cardItems}>
+                        {order.items.map((item, index) => (
+                          <div key={index} className={styles.cardItem}>
+                            {item.img && item.type && (
+                              <Image
+                                src={`${apiUrl}/images/catalog/${item.type}/${item.img}`}
+                                width={60}
+                                height={60}
+                                alt={item.name || 'Товар'}
+                              />
+                            )}
+                            <div>
+                              <p>{item.name || `Товар ${item.productId}`} — {item.price} руб (x{item.quantity})</p>
+                              {item.type === 'dessert' && item.amount !== undefined && (
+                                <p>В наборе {item.amount} штук</p>
                               )}
-                              {item.name || `Товар ${item.productId}`} — {item.price} руб (x{item.quantity})
+                              {item.type === 'cake' && item.weight !== undefined && (
+                                <p>Вес: {item.weight} кг</p>
+                              )}
                             </div>
-                          ))}
-                        </td>
-                        <td>Кол-во</td>
-                        <td>{order.total_price} руб</td>
-                        <td>{order.delivery_date}</td>
-                        <td>{order.status}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>

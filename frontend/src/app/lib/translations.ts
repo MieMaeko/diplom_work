@@ -2,7 +2,10 @@ export const typeTranslations: { [key: string]: string } = {
   cake: "Торты",
   dessert: "Десерты"
 };
-
+export const typeTranslation: { [key: string]: string } = {
+  cake: "Торт",
+  dessert: "Десерт"
+};
 export const categoryTranslations: { [key: string]: { [key: string]: string } } = {
   cake: {
     child: "Детские",

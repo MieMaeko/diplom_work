@@ -35,6 +35,11 @@ export class ProductService {
   }
 
   async create(dto: CreateProductDto, imageName: string): Promise<Product> {
+    // Проверяем, что изображение действительно выбрано
+    if (!imageName) {
+      throw new Error('Изображение не выбрано');
+    }
+
     const productData: Partial<Product> = {
       name: dto.name,
       price: dto.price,
@@ -48,8 +53,17 @@ export class ProductService {
       productData.amount = dto.amount;
     }
 
+    // Создание объекта продукта
     const product = this.productRepository.create(productData);
-    return this.productRepository.save(product);
+
+    try {
+      // Сохранение продукта в базе данных
+      return await this.productRepository.save(product);
+    } catch (error) {
+      // Логируем ошибку и выбрасываем
+      console.error('Ошибка при сохранении продукта:', error);
+      throw new Error('Не удалось сохранить продукт');
+    }
   }
 
   async updateProductStatus(id: number, updateData: Partial<Product>): Promise<Product> {
@@ -59,5 +73,14 @@ export class ProductService {
       throw new NotFoundException(`Продукт с ID ${id} не найден`);
     }
     return updated;
+  }
+
+  async delete(id: number): Promise<void> {
+    const product = await this.productRepository.findOne({ where: { id } });
+    if (!product) {
+      throw new NotFoundException(`Продукт с ID ${id} не найден`);
+    }
+
+    await this.productRepository.delete(id);
   }
 }

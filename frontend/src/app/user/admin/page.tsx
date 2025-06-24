@@ -10,6 +10,8 @@ import axios from '../../api/axiosConfig'
 import { OrderStatus, statusOptions, StatusOption } from '../../../../types/order-status';
 import { typeTranslations, categorTranslations } from '@/app/lib/translations';
 import ProductModal from '@/app/components/addProductForm';
+import { apiUrl } from '@/app/lib/config';
+import DeleteConfirmationModal from '@/app/components/deleteForm';
 
 interface Item {
   id: number;
@@ -157,17 +159,31 @@ export default function AdminPage() {
   const [filter, setFilter] = useState<'all' | 'planned' | 'done'>('all');
   const [products, setProducts] = useState<Product[]>([]);
   const [showForm, setShowForm] = useState(false);
-  // const [newProduct, setNewProduct] = useState<Product & { image: File | null }>({
-  //   id: 0,
-  //   name: '',
-  //   price: 0,
-  //   category: '',
-  //   type: '',
-  //   in_stock: true,
-  //   img: '',
-  //   image: null
-  // });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<number | null>(null);
+  const [search, setSearch] = useState('');
 
+
+
+  const handleDeleteClick = (productId: number) => {
+    setProductToDelete(productId);
+    setShowDeleteModal(true);
+  };
+  const handleDeleteProduct = async (productId: number) => {
+    if (productId === null) return;
+
+    try {
+      await axios.delete(`/products/${productId}`);
+      setProducts(products.filter((product) => product.id !== productId));
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error('Ошибка при удалении товара:', error);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
   useEffect(() => {
     const checkAdmin = async () => {
       try {
@@ -232,7 +248,9 @@ export default function AdminPage() {
       console.error('Ошибка при обновлении in_stock:', err);
     }
   };
-
+  const filteredProducts = products.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className={styles['admin-work']}>
@@ -309,7 +327,7 @@ export default function AdminPage() {
                   {order.items.map((item: Item) => (
                     <div key={item.id} className={styles['order-item']}>
                       <Image
-                        src={`/images/catalog/${item.product.type}/${item.product.img}`}
+                        src={`${apiUrl}/images/catalog/${item.product.type}/${item.product.img}`}
                         width={50}
                         height={50}
                         alt={item.product.name}
@@ -384,7 +402,14 @@ export default function AdminPage() {
       </div>
       <div>
         <h4 id="goods">Товары</h4>
-        <input type="text" placeholder='Поиск' />
+        <input
+          type="text"
+          placeholder="Поиск по названию"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ marginBottom: '1rem', padding: '0.5rem', fontSize: '1rem' }}
+        />
+
         <button className={styles['create-product-button']} onClick={() => setShowForm(true)}>Добавить новый товар</button>
         <table>
           <thead>
@@ -398,7 +423,7 @@ export default function AdminPage() {
             </tr>
           </thead>
           <tbody>
-            {products.map((p, index) => (
+            {filteredProducts.map((p, index) => (
               <tr key={index}>
                 <td>{p.name}</td>
                 <td>{p.price} руб</td>
@@ -426,12 +451,13 @@ export default function AdminPage() {
                 </td>
                 <td>
                   <Image
-                    src={`/images/catalog/${p.type}/${p.img}`}
+                    src={`${apiUrl}/images/catalog/${p.type}/${p.img}`}
                     width={60}
                     height={60}
                     alt={p.name}
                   />
                 </td>
+                <td> <button onClick={() => handleDeleteClick(p.id)} className={styles.deleteButton}>X</button></td>
               </tr>
             ))}
           </tbody>
@@ -440,6 +466,12 @@ export default function AdminPage() {
           showForm={showForm}
           setShowForm={setShowForm}
           setProducts={setProducts}
+        />
+        <DeleteConfirmationModal
+          showModal={showDeleteModal}
+          productId={productToDelete}
+          onConfirmDelete={handleDeleteProduct}
+          onCancelDelete={handleCancelDelete}
         />
 
       </div>

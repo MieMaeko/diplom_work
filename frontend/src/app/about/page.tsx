@@ -6,7 +6,7 @@ import Lightbox, { type SlideImage } from 'yet-another-react-lightbox'
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css"
 import Image from "next/image";
-
+import { apiUrl } from "../lib/config";
 // type Slide = {
 //   src: string;
 //   alt: string;
@@ -14,11 +14,10 @@ import Image from "next/image";
 //   height: number;
 // };
 export default function AboutPage() {
-
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const images: SlideImage[] = Array.from({ length: 9 }, (_, i) => ({
-    src: `/images/sertificates/${i + 1}.png`,
+    src: `${apiUrl}/images/sertificates/${i + 1}.png`,
     alt: `Сертификат ${i + 1}`,
     width: 350,
     height: 600,

@@ -53,9 +53,16 @@
     }
 
     .order-filters {
+        margin-left: 5%;
+        margin-bottom: 1%;
+        display: flex;
+      
+        gap: 3%;
         label {
             color: $brown-color;
             font-size: 20px;
+            display: flex;
+            gap: 4%;
         }
     }
 
@@ -71,6 +78,7 @@
         align-items: center;
         z-index: 999;
     }
+
     .create-product-button {
         cursor: pointer;
         padding: 8px 12px;
@@ -81,11 +89,13 @@
         border-radius: 8px;
         border: none;
     }
+
     .modalContent {
-        background: white;
+        background: $beige-color;
         padding: 2rem;
         border-radius: 8px;
-        max-width: 500px;
+        max-width: 700px;
+        
         width: 100%;
         position: relative;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
@@ -95,7 +105,8 @@
         position: absolute;
         top: 10px;
         right: 15px;
-        font-size: 24px;
+        font-size: 44px;
+        color: $pink-color;
         cursor: pointer;
     }
 
@@ -141,4 +152,43 @@
     }
 
     .user-table {}
+
+    .productForm {
+        h4 {
+            text-align: center;
+        }
+
+        .formGroup {
+            max-width: 400px;
+            margin: 1.5% auto;
+            font-size: 28px;
+            font-weight: $bold;
+            color: $brown-color;
+            display: flex;
+            justify-content: space-between;
+            input,select {
+                width: 150px;
+                padding: 2%;
+                background-color: $beige-color;
+                border: 2px solid $brown-color;
+                border-radius: 10px;
+                option {
+                    font-size: 20px;
+                }
+            }
+        }
+
+        .buttonForm {
+            background-color: $brown-color;
+            color: $beige-color;
+            width: 220px;
+            font-size: 24px;
+            padding: 3%;
+            border-radius: 20px;
+            border: none;
+            margin: 2% auto;
+            display: block;
+        }
+    }
+
 }

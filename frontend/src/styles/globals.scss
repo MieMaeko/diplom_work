@@ -55,7 +55,7 @@
 body {
   height: 100%;
   background-color: base.$beige-color;
-
+  
   a {
     text-decoration: none;
     color: base.$beige-color
@@ -314,12 +314,25 @@ body {
   background-size: cover;
   height: 433px;
   position: relative;
+
+  @include mixins.mobile {
+    height: 260px;
+  }
+   @include mixins.desktop {
+    height: 580px;
+  }
 }
 
 .catalog-pink {
   background-image: url('/images/vectors/pinkCatalog.svg');
   background-size: cover;
   height: 367px;
+  @include mixins.mobile {
+    height: 220px;
+  }
+  @include mixins.desktop {
+    height: 490px;
+  }
 }
 
 .about-beige {

@@ -2,12 +2,12 @@
 import { useEffect, useState } from 'react';
 import localforage from 'localforage';
 import { useRouter } from 'next/navigation';
-// import axios from 'axios';
 import axios from '../api/axiosConfig';
 import Image from 'next/image';
 import styles from './styles/cart.module.scss'
-
-
+import { apiUrl } from '@/app/lib/config';
+import { useForm } from 'react-hook-form';
+import { typeTranslation } from '../lib/translations';
 interface CartItem {
     uid: string;
     productId: number;
@@ -19,8 +19,10 @@ interface CartItem {
     img: string;
     fillingId: number;
     filling: string;
-    addons: string[];
+    addons?: { id: number; name: string }[];
+    amount?: number;
 }
+
 interface UserData {
     id: number;
     name: string;
@@ -41,61 +43,67 @@ interface FormData {
 }
 
 export default function CartPage() {
-    const [cart, setCart] = useState<CartItem[]>([]);  
-    const [showModal, setShowModal] = useState<boolean>(false);  
-    const [totalPrice, setTotalPrice] = useState<number>(0);  
-    const [userData, setUserData] = useState<UserData | null>(null); 
-    const [formData, setFormData] = useState<FormData>({
-        name: '',
-        phone: '',
-        email: '',
-        address: '',
-        deliveryDate: '',
-        deliveryMethod: '',
-        paymentMethod: 'cash',
-        comment: ''
-    });
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const [showModal, setShowModal] = useState(false);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [userData, setUserData] = useState<UserData | null>(null);
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors }
+    } = useForm<FormData>({ defaultValues: { paymentMethod: 'cash' } });
 
     const router = useRouter();
 
+    const extractDigits = (val: string) =>
+        val.replace(/\D/g, '').replace(/^8/, '7').slice(0, 11);
+
+    const formatPhone = (digits: string) => {
+        if (!digits) return '+7';
+        let formatted = '+7';
+        if (digits.length > 1) formatted += ' (' + digits.slice(1, 4);
+        if (digits.length >= 4) formatted += ') ' + digits.slice(4, 7);
+        if (digits.length >= 7) formatted += '-' + digits.slice(7, 9);
+        if (digits.length >= 9) formatted += '-' + digits.slice(9, 11);
+        return formatted;
+    };
 
     useEffect(() => {
         const fetchCart = async () => {
             const storedCart = (await localforage.getItem<CartItem[]>('cart')) || [];
             setCart(storedCart);
-            const total = storedCart.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0);
+            const total = storedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
             setTotalPrice(total);
         };
 
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get('/user/profile', { withCredentials: true })
+                const response = await axios.get('/user/profile', { withCredentials: true });
                 if (response.data) {
+                    const raw = extractDigits(response.data.phone || '');
                     setUserData(response.data);
-                    console.log('User profile data:', response.data);
-                    setFormData((prevData) => ({
-                        ...prevData,
-                        name: response.data.name || '',
-                        phone: response.data.phone || '',
-                        email: response.data.email || '',
-
-                    }));
-                } else {
-                    console.log('User not authenticated');
+                    setValue('name', response.data.name || '');
+                    setValue('phone', formatPhone(raw));
+                    setValue('email', response.data.email || '');
                 }
             } catch (error) {
-                console.log('Error fetching user profile', error);
+                console.log('Ошибка при загрузке профиля', error);
             }
         };
 
+        fetchCart();
+        fetchUserProfile();
+    }, [setValue]);
+
+    useEffect(() => {
         if (showModal) {
             const timer = setTimeout(() => {
                 router.push('/user/profile');
             }, 2000);
             return () => clearTimeout(timer);
         }
-        fetchCart();
-        fetchUserProfile();
     }, [showModal, router]);
 
     const handleChangeQuantity = async (uid: string, delta: number) => {
@@ -106,102 +114,106 @@ export default function CartPage() {
         setCart(updated);
         setTotalPrice(updated.reduce((sum, i) => sum + i.price * i.quantity, 0));
     };
+
     const handleRemoveItem = async (itemId: number) => {
-        const updatedCart = cart.filter((item) => item.productId !== itemId);
+        const updatedCart = cart.filter(item => item.productId !== itemId);
         await localforage.setItem('cart', updatedCart);
         setCart(updatedCart);
-        const total = updatedCart.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0);
-        setTotalPrice(total);
+        setTotalPrice(updatedCart.reduce((sum, i) => sum + i.price * i.quantity, 0));
     };
 
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
-        const isAuthenticated = userData && userData.id;
-        if (isAuthenticated) {
-            const orderData = {
-                user_id: userData.id,
-                user_name: userData.name || formData.name,
-                user_phone: userData.phone || formData.phone,
-                user_email: formData.email,
-                address: formData.address,
-                delivery_date: formData.deliveryDate,
-                delivery_method: formData.deliveryMethod,
-                total_price: totalPrice,
-                status: 'оформлен',
-                comment: formData.comment,
-                items: cart.map(item => ({
-                    productId: item.productId,
-                    fillingId: item.fillingId,
-                    addons: item.addons,
-                    quantity: item.quantity,
-                    weight: item.weight,
-                    price: item.price,
-                }))
-            };
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target.value;
+        const digits = extractDigits(input);
+        setValue('phone', formatPhone(digits));
+    };
 
-            console.log(orderData)
-            try {
-                await axios.post('/orders', orderData);
-                await localforage.removeItem('cart');
-                setCart([]);
-                setFormData({
-                    name: '',
-                    phone: '',
-                    email: '',
-                    address: '',
-                    deliveryDate: '',
-                    deliveryMethod: '',
-                    paymentMethod: 'cash',
-                    comment: ''
-                });
-                setShowModal(true);
+    // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const { name, value } = e.target;
+    //     if (name === 'phone') return handlePhoneChange(e);
+    //     setFormData(prev => ({ ...prev, [name]: value }));
+    // };
 
-            } catch (error) {
-                console.log('Ошибка при оформлении заказа:', error);
-            }
-        } else {
+    const onSubmit = async (data: FormData) => {
+        if (!userData?.id) {
             alert('Пожалуйста, авторизуйтесь для оформления заказа.');
-            // router.push('/login'); // Перенаправление на страницу логина
+            return;
         }
-    };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        const digits = extractDigits(data.phone);
+        const formattedPhone = formatPhone(digits);
+
+        const orderData = {
+            user_id: userData.id,
+            user_name: data.name,
+            user_phone: formattedPhone,
+            user_email: data.email,
+            address: data.address,
+            delivery_date: data.deliveryDate,
+            delivery_method: data.deliveryMethod,
+            total_price: totalPrice,
+            status: 'оформлен',
+            comment: data.comment,
+            items: cart.map(item => ({
+                productId: item.productId,
+                fillingId: item.fillingId,
+                quantity: item.quantity,
+                ...(item.type === 'cake' ? { weight: item.weight } : {}),
+                price: item.price,
+                addonIds: item.addons ? item.addons.map(a => a.id) : [],
+                ...(item.amount ? { amount: item.amount } : {})
+            }))
+        };
+
+        try {
+            console.log(orderData)
+            await axios.post('/orders', orderData);
+            await localforage.removeItem('cart');
+            setCart([]);
+            setShowModal(true);
+        } catch (error) {
+            console.log('Ошибка при оформлении заказа:', error);
+        }
     };
 
     return (
         <div className={styles['make-order']}>
             <h3>Корзина</h3>
             <section>
-                {cart.length === 0 ? <p>Корзина пуста</p> : (
+                {cart.length === 0 ? (
+                    <p>Корзина пуста</p>
+                ) : (
                     <div className={styles.products}>
-                        {cart.map((item) => (
+                        {cart.map(item => (
                             <div className={styles.product} key={item.productId}>
                                 <Image
                                     className={styles['item-img']}
-                                    src={`/images/catalog/${item.type}/${item.img}`}
+                                    src={`${apiUrl}/images/catalog/${item.type}/${item.img}`}
+                                    alt={item.name}
                                     width={150}
                                     height={150}
-                                    alt={item.name}
                                 />
-                                <div>
-                                    <p>Торт &quot;{item.name}&quot;</p>
+                                <div className={styles['item-info']}>
+                                    <p>{typeTranslation[item.type]} &quot;{item.name}&quot;</p>
                                     <p>Начинка: {item.filling}</p>
-                                    <p>Кол-во в коробке:</p>
+                                    {item.addons && item.addons.length > 0 && (
+                                        <p>Топпинги: {item.addons.map(a => a.name).join(', ')}</p>
+                                    )}
+                                    {item.type === 'cake' && (
+                                        <p>Вес: {item.weight} кг</p>
+                                    )}
+                                    {item.type === 'dessert' && (
+                                        <p>Кол-во в коробке: {item.amount}</p>
+                                    )}
                                 </div>
-                                <div>
+                                <div className={styles['item-price']}>
                                     <p>{item.price} руб</p>
                                     <p className={styles.quantityProduct}>
-                                        <span className={styles.changeQuantity} onClick={() => handleChangeQuantity(item.uid, -1)}>–</span>
+                                        <span className={styles.changeQuantity} onClick={() => handleChangeQuantity(item.uid, -1)}>{'\u2212'}</span>
                                         <span>{item.quantity}</span>
                                         <span className={styles.changeQuantity} onClick={() => handleChangeQuantity(item.uid, +1)}>+</span>
                                     </p>
                                     <p>{item.price * item.quantity} руб</p>
-
                                     <Image
                                         className={styles.trash}
                                         src={'/icons/trash1.svg'}
@@ -210,117 +222,99 @@ export default function CartPage() {
                                         height={30}
                                         onClick={() => handleRemoveItem(item.productId)}
                                     />
+
                                 </div>
-                                {/* <hr /> */}
+
                             </div>
                         ))}
-                        <h2>Итого: {totalPrice} руб</h2>
-
+                        <hr />
+                        <h2>Итого: {totalPrice}₽</h2>
                     </div>
                 )}
+
                 <div className={styles.order}>
                     <h4>Оформление заказа</h4>
-                    <form onSubmit={handleSubmit} className={styles['order-block']}>
-                        <div>
+                    <form onSubmit={handleSubmit(onSubmit)} className={styles['order-block']}>
+
+                        <div className={styles.radioGroup}>
                             <p>Способы доставки</p>
-                            <label>
+
+                            <label className={styles.customRadio}>
                                 <input
                                     type="radio"
-                                    name="deliveryMethod"
                                     value="pickup"
-                                    checked={formData.deliveryMethod === 'pickup'}
-                                    onChange={handleInputChange}
+                                    className={styles.radio}
+                                    {...register('deliveryMethod', { required: true })}
                                 />
+                                <span className={styles['radio-custom']}></span>
                                 Самовывоз
                             </label>
-                            <label>
+
+                            <label className={styles.customRadio}>
                                 <input
                                     type="radio"
-                                    name="deliveryMethod"
                                     value="delivery"
-                                    checked={formData.deliveryMethod === 'delivery'}
-                                    onChange={handleInputChange}
+                                    className={styles.radio}
+                                    {...register('deliveryMethod', { required: true })}
                                 />
+                                <span className={styles['radio-custom']}></span>
                                 Доставка в пределах МКАД
                             </label>
+
+                            {errors.deliveryMethod && <p className={styles.errorText}>Выберите способ доставки</p>}
                         </div>
                         <div className={styles['order-inputs']}>
+
+                            <input {...register('name', { required: 'Имя обязательно' })} placeholder="Имя" />
+                            {errors.name && <p>{errors.name.message}</p>}
+
                             <input
-                                type="text"
-                                name="name"
-                                placeholder="Имя"
-                                value={formData.name || ''}
-                                onChange={handleInputChange}
+                                {...register('phone', {
+                                    required: 'Телефон обязателен',
+                                    pattern: {
+                                        value: /^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/,
+                                        message: 'Введите номер в формате +7 (XXX) XXX-XX-XX'
+                                    }
+                                })}
+                                onChange={handlePhoneChange}
+                                placeholder="+7 (___) ___-__-__"
+                                value={watch('phone') || ''}
                             />
-                            <input
-                                type="number"
-                                name="phone"
-                                placeholder="Телефон"
-                                value={formData.phone || ''}
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="E-mail"
-                                value={formData.email || ''}
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                type="text"
-                                name="address"
-                                placeholder="Адрес доставки"
-                                value={formData.address || ''}
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                type="date"
-                                name="deliveryDate"
-                                value={formData.deliveryDate || ''}
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                type="text"
-                                name="comment"
-                                placeholder="Комментарий"
-                                value={formData.comment}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <hr />
-                        <div>
-                            <p>Способы оплаты</p>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="paymentMethod"
-                                    value="cash"
-                                    checked={formData.paymentMethod === 'cash'}
-                                    onChange={handleInputChange}
-                                />
-                                Наличные
-                            </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    name="paymentMethod"
-                                    value="card"
-                                    checked={formData.paymentMethod === 'card'}
-                                    onChange={handleInputChange}
-                                />
-                                Карта
-                            </label>
+                            {errors.phone && <p>{errors.phone.message}</p>}
+
+                            <input {...register('email', { required: 'Email обязателен' })} placeholder="Email" />
+                            {errors.email && <p>{errors.email.message}</p>}
+
+                            <input {...register('address', { required: 'Адрес обязателен' })} placeholder="Адрес доставки" />
+                            {errors.address && <p>{errors.address.message}</p>}
+
+                            <input type="date" {...register('deliveryDate', { required: 'Дата доставки обязательна' })} />
+                            {errors.deliveryDate && <p>{errors.deliveryDate.message}</p>}
+
+                            <input {...register('comment')} placeholder="Комментарий" />
                         </div>
 
                         <hr />
-                        <div>
-                            <p>Заказ позиций {totalPrice} рублей</p>
-                            <p>Итого: {totalPrice}</p>
+                        <div className={styles.radioGroup}>
+                            <p>Способы оплаты</p>
+                            <label className={styles.customRadio}>
+                                <input type="radio" value="cash" className={styles.radio} {...register('paymentMethod', { required: true })} />
+                                <span className={styles['radio-custom']}></span>
+                                Наличные
+                            </label>
+
+                            <label className={styles.customRadio}>
+                                <input className={styles.radio} type="radio" value="card" {...register('paymentMethod', { required: true })} />
+                                <span className={styles['radio-custom']}></span>
+                                Карта
+                            </label>
+                            {errors.paymentMethod && <p>Выберите способ оплаты</p>}
                         </div>
                         <button type="submit" className={styles.submitCart}>Подтвердить заказ</button>
                     </form>
                 </div>
             </section>
+
             {showModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>

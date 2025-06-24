@@ -31,7 +31,8 @@ export class UserController {
 
   @Put('profile')
   async updateProfile(@Body() body: Record<string, any>, @Session() session: Record<string, any>) {
-
+    console.log('Session ID:', session.id);
+    console.log('User ID in session:', session.userId);
     if (!session.userId) throw new UnauthorizedException();
 
     const allowedFields: (keyof User)[] = ['name', 'phone', 'address'];
@@ -108,11 +109,13 @@ export class UserController {
     }
 
     session.userId = user.id;
+
     return {
       message: 'Login successful',
       role: user.role,
     };
   }
+
   @Post('logout')
   async logout(@Session() session: Record<string, any>) {
     session.userId = null;

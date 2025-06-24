@@ -12,7 +12,7 @@ export const footerLinks = [
   },
   {
     title: 'Торты',
-    type: 'cakes',
+    type: 'cake',
     categories: Object.entries(categoryTranslations.cake).map(([key, label]) => ({
       key,
       label,
@@ -20,7 +20,7 @@ export const footerLinks = [
   },
   {
     title: 'Десерты',
-    type: 'desserts',
+    type: 'dessert',
     categories: Object.entries(categoryTranslations.dessert).map(([key, label]) => ({
       key,
       label,

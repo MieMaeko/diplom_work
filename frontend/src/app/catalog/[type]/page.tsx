@@ -20,6 +20,7 @@ interface Product {
   category: string;
   price: number;
   img: string;
+  in_stock: boolean;
 }
 
 interface SortOption {
@@ -175,9 +176,11 @@ export default function CatalogPage() {
   };
 
   const filters = type && categoryTranslations[type] ? categoryTranslations[type] : {};
+  const availableProducts = products.filter((p: Product) => p.in_stock);
+
   const filteredProducts = selectedCategory
-    ? products.filter((p: Product) => p.category === selectedCategory)
-    : products;
+    ? availableProducts.filter((p: Product) => p.category === selectedCategory)
+    : availableProducts;
 
   const filteredBySearch = filteredProducts.filter((p: Product) =>
     p.name.toLowerCase().includes(searchTerm.toLowerCase())

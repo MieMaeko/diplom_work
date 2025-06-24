@@ -1,22 +1,69 @@
-import { IsNumber, IsString, IsArray, IsEnum, ValidateNested, IsOptional } from 'class-validator';
+import {
+  IsNumber,
+  IsString,
+  IsArray,
+  IsEnum,
+  ValidateNested,
+  IsOptional,
+  IsBoolean
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { OrderStatus } from './order-status.enum';
 
-class OrderItemDto {
-  @IsNumber()
-  productId: number;
 
+class CustomDataDto {
+  @IsString()
+  shape: string;
+
+  @IsString()
+  decor: string;
+
+  @IsOptional()
+  @IsString()
+  wishes?: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+}
+
+class OrderItemDto {
+  @IsOptional()
   @IsNumber()
-  fillingId: number;
+  productId?: number;
+
+  @IsOptional()
+  @IsNumber()
+  fillingId?: number;
 
   @IsNumber()
   quantity: number;
 
+  @IsOptional()
   @IsNumber()
-  weight: number;
+  weight?: number;
 
+  @IsOptional()
   @IsNumber()
-  price: number;
+  price?: number;
+  
+  @IsOptional()
+  @IsNumber()
+  amount?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  is_custom?: boolean;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => CustomDataDto)
+  custom_data?: CustomDataDto;
+
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  addonIds?: number[];
 }
 
 export class CreateOrderDto {

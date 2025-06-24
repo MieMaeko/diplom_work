@@ -10,6 +10,23 @@
         top: 14%;
         left: 2%;
         z-index: 3;
+
+        @include mixins.tablet {
+            left: 7%;
+        }
+
+        @include mixins.mobile {
+            top: 9%;
+            font-size: 50px;
+            left: 9%;
+        }
+
+        @include mixins.desktop {
+            left: 4%;
+            top: 17%;
+            font-size: 74px;
+        }
+
     }
 
     section {
@@ -18,18 +35,48 @@
         margin: 4% auto;
         gap: 5%;
 
+        hr {
+            border: none;
+            height: 2px;
+            background-color: $peach-color;
+            margin: 20px 0;
+            border-radius: 2px;
+        }
+
+        @include mixins.tablet {
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        @include mixins.mobile {
+            flex-direction: column;
+            gap: 40px;
+            margin-top: 10%;
+        }
+
         .products,
         .order {
-            background-color: $peach-color;
+            box-shadow: 3px 8px 25px #b3675083;
             padding: 3%;
             border-radius: 3%;
+
+            @include mixins.mobile {
+                box-shadow: 4px 4px 25px #b3675059;
+            }
         }
     }
 
     .products {
-        flex: 1;
-
+        flex: 3;
         width: auto;
+
+
+
+        h2 {
+            float: right;
+            color: $darkPeach-color;
+            font-size: 38px;
+        }
 
         .product {
             display: flex;
@@ -37,21 +84,94 @@
             color: $brown-color;
             font-size: 24px;
             font-weight: $semi-bold;
-            .trash {
-                color: red;
+            margin-bottom: 4%;
+            gap: 2%;
+
+            img {
+                border-radius: 10px;
             }
+            .trash {
+                float: right;
+                margin-top: 4%;
+                cursor: pointer;
+                transition: transform 0.5s ease;
+
+                &:hover {
+                    transform: scale(1.2);
+                }
+            }
+
+            .item-price {
+                text-align: justify;
+
+                p {
+                    white-space: nowrap;
+                }
+            }
+
+            .item-info {
+                width: 60%;
+                margin: 0 auto;
+            }
+
+            @include mixins.mobile {
+                .item-info {
+                    font-size: 12px;
+                }
+
+                .item-price {
+                    font-size: 15px;
+                    text-align: center;
+
+                }
+
+                .trash {
+                    width: auto;
+                    height: 38px;
+                    margin-top: 10%;
+                    float: none;
+                    margin: 0 auto;
+                }
+            }
+
             .item-img {
-                height: auto;
-                width: 150px;
+                width: auto;
+
+                @include mixins.tablet {
+                    height: 130px;
+                }
+
+                @include mixins.mobile {
+                    height: 100px;
+                }
+
+                @include mixins.laptop {
+                    height: 160px;
+                }
+
+                @include mixins.desktop {
+                    height: 180px;
+                }
             }
 
             .quantityProduct {
                 display: flex;
                 justify-content: space-between;
-                width: 50px;
+                // width: 50px;
+                margin: 0 auto;
+                align-items: center;
 
                 .changeQuantity {
-                    font-size: smaller;
+                    font-size: 50px;
+                    font-weight: 100;
+                    color: $darkPeach-color;
+                    cursor: pointer;
+                    transition: all 0.5s ease;
+
+                    &:hover {
+                        color: $peach-color;
+                        transform: scale(1.2);
+                    }
                 }
             }
 
@@ -60,24 +180,107 @@
 
     .order {
         flex: 1;
-
+        .order-block {
+            width: 90%;
+            margin: 0 auto;
+        }
         h4 {
-            color: $pink-color;
+            color: $darkPeach-color;
             font-size: 50px;
             font-weight: $extra-bold;
+            margin-bottom: 5%;
+
+            @include mixins.mobile {
+                font-size: 40px;
+            }
         }
+
+        .radioGroup {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            color: $darkPeach-color;
+            font-size: 23px;
+            font-weight: $medium;
+            margin-bottom: 5%;
+
+            .customRadio {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 10px;
+                cursor: pointer;
+                position: relative;
+
+
+                input[type="radio"] {
+                    appearance: none;
+                    position: absolute;
+                    opacity: 0;
+                    pointer-events: none;
+                }
+
+                .radio-custom {
+                    width: 20px;
+                    height: 20px;
+                    border: 2px solid #B36750;
+                    border-radius: 50%;
+                    display: inline-block;
+                    position: relative;
+                    flex-shrink: 0;
+                }
+
+                input[type="radio"]:checked+.radio-custom::after {
+                    content: "";
+                    position: absolute;
+                    top: 4px;
+                    left: 4px;
+                    width: 12px;
+                    height: 12px;
+                    background-color: #B36750;
+                    border-radius: 50%;
+                }
+            }
+
+            .errorText {
+                color: red;
+                font-size: 0.9em;
+            }
+        }
+
     }
 
     .order-inputs {
+        margin-top: 6%;
+        p {
+            color: #EB6363;
+            font-weight: $bold;
+            margin-left: 3%;
+        }
         input {
             background-color: $beige-color;
-            color: $pink-color;
+            color: $darkPeach-color;
             font-size: 24px;
-            width: 320px;
+            width: 90%;
             height: 70px;
             border: 4px solid $brown-color;
-            border-radius: 20px;
+            border-radius: 15px;
+            margin-top: 4%;
+            padding-left: 4%;
+            transition: all 0.5s ease;
+            
+            &::placeholder {
+                color: $darkPeach-color;
+                opacity: 1;
+            }
+
+            &:focus {
+                outline: none;
+                box-shadow: 0 0 8px 2px $brown-color;
+                font-weight: $bold;
+            }
         }
+
     }
 
     .submitCart {
@@ -88,6 +291,14 @@
         border: none;
         border-radius: 20px;
         font-size: 24px;
+        cursor: pointer;
+        border: 3px solid transparent;
+         transition: all 0.6s ease;
+        &:hover {
+            color: $brown-color;
+            border-color: $brown-color;
+            background-color: $beige-color;
+        }
     }
 }
 
